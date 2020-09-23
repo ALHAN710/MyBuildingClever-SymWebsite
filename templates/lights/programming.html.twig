@@ -1,0 +1,540 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lights Programming{% endblock %}
+
+{% block stylesheet	%}
+
+	<script>
+		var $url = "{{ path('light_prog') }}";
+        var tabInt = {{devicesNb.NbLightInt}};
+        var tabExt = {{devicesNb.NbLightExt}};
+		//var $alarmUrl = "{{ path('security_alarm')	}}";	
+	</script>
+
+{% endblock	%}
+
+{% block body %}
+    {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+                                    
+    <h1>Lights Programming <i class="fa fa-clock"></i> </h1>
+    <!-- Main content START -->
+    <div class="row">
+        <div class="col-12 col-sm-10 offset-sm-1">
+        <!-- Settings tabs START -->
+        <ul class="nav nav-tabs nav-fill" role="tablist">
+            {% if devicesNb.NbLightInt > 0 %}
+            <li class="nav-item">
+            <a class="nav-link {% if tabpanel == 0 %}active{% endif %}" data-toggle="tab" href="#LightInt" role="tab">Interior</a>
+            </li>
+            {% endif %}
+            {% if devicesNb.NbLightExt > 0 %}
+            <li class="nav-item">
+            <a class="nav-link {% if tabpanel == 1 %}active{% endif %}" data-toggle="tab" href="#LightExt" role="tab">Exterior</a>
+            </li>
+            {% endif %}
+        </ul>
+        <div class="info-holder info-ct">
+            <div data-toggle="popover-all" data-content="Customized tabbed interface" data-original-title="Tabs" data-placement="top" data-offset="0,48"></div>
+        </div>
+        <!-- Settings tab panes -->
+        <div class="tab-content px-4 px-sm-0 py-sm-4 mt-4">
+
+            <!-- LIGHT INTERIOR pane START -->
+            <div class="tab-pane fade {% if tabpanel == 0 %} show active {% endif %}" id="LightInt" role="tabpanel">
+            
+                <div class="form-group">
+                    <form class="form-inline justify-content-left">
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-lightbulb"></i></span>
+                            </div>
+                            {% if devicesNb.NbLightInt > 1 %}
+                            <select class="form-control " id="lightInt_select" style="min-height: 40px; min-width: 30px">
+                                {% for lightInt in devicesTab.LightInt %}
+                                <option value="{{lightInt.name}}" {% if lightInt.id == id %}selected="selected"{% endif %}>{{lightInt.name}}</option>
+                                {% endfor %}
+                            </select>
+                            {% else %}
+                            <input type="text" class="form-control" placeholder="{{lightInt.name}}" disabled>
+                            {% endif %}
+
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body table-responsive p-0" style="max-height: 500px;">
+                    <div class="table-wrap">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-head-fixed dt-responsive text-nowrap table-bordered" id="table_progpanel">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="form-inline justify-content-center">Applying
+                                                days</div>
+                                        </th>
+                                        <th>
+                                            <div class="form-inline justify-content-center">Working
+                                                from</div>
+                                        </th>
+                                        <th>
+                                            <div class="form-inline justify-content-center">To</div>
+                                        </th>
+                                        <th>
+                                            <div class="form-inline justify-content-center">Auto On
+                                                Status</div>
+                                        </th>
+                                        <th>
+                                            <div class="form-inline justify-content-center">Timer
+                                                beyond Work interval (in minutes)</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for day in days %}
+                                    <tr>
+                                        <td class="">
+                                            <div class="form-inline justify-content-center">
+                                                {{day}}
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time" name="lightInt_timeweek_from{{ loop.index0 }}" id="lightInt_timeweek_from{{ loop.index0 }}" align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time" name="lightInt_timeweek_to{{ loop.index0 }}" id="lightInt_timeweek_to{{ loop.index0 }}" align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <form class="form-inline justify-content-center">
+                                                <div class="form-check mb-2 mr-sm-2">
+
+                                                    <div class="custom-control custom-checkbox align-middle" align="center">
+                                                        <input type="checkbox" class="custom-control-input" id="lightInt_auto_on_check{{ loop.index0 }}" checked="checked">
+                                                        <label class="custom-control-label" for="lightInt_auto_on_check{{ loop.index0 }}"></label>
+                                                    </div>
+
+
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control mr-sm-4 " type="number" min="0" max="1440" name="lightInt_timer{{ loop.index0 }}" id="lightInt_timer{{ loop.index0 }}">
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    {#
+                                    <tr>
+                                        <td class="">
+                                            <div class="form-inline justify-content-center">
+                                                Monday to Friday
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time" name="lightInt_timeweek_from1" id="lightInt_timeweek_from1" align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time" name="lightInt_timeweek_to1" id="lightInt_timeweek_to1" align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <form class="form-inline justify-content-center">
+                                                <div class="form-check mb-2 mr-sm-2">
+
+                                                    <div class="custom-control custom-checkbox align-middle" align="center">
+                                                        <input type="checkbox" class="custom-control-input" id="lightInt_auto_on_check1" checked="checked">
+                                                        <label class="custom-control-label" for="lightInt_auto_on_check1"></label>
+                                                    </div>
+
+
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control mr-sm-4 " type="number" min="0" max="1440" name="lightInt_timer1" id="lightInt_timer1">
+
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                Saturday
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time"
+                                                    id="lightInt_timeweek_from2" align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time"
+                                                    id="lightInt_timeweek_to2" align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <form class="form-inline justify-content-center">
+                                                <div class="form-check mb-2 mr-sm-2">
+
+                                                    <div class="custom-control custom-checkbox"
+                                                        align="center">
+                                                        <input type="checkbox"
+                                                            class="custom-control-input"
+                                                            id="lightInt_auto_on_check2" checked="checked">
+                                                        <label class="custom-control-label"
+                                                            for="lightInt_auto_on_check2"></label>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control mr-sm-4 " type="number"
+                                                    min="0" max="1440" name="lightInt_timer2" id="lightInt_timer2">
+
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="">
+                                            <div class="form-inline justify-content-center">
+                                                Sunday
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time"
+                                                    name="lightInt_timeweek_from3" id="lightInt_timeweek_from3"
+                                                    align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time"
+                                                    name="lightInt_timeweek_to3" id="lightInt_timeweek_to3"
+                                                    align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+
+                                            <form class="form-inline justify-content-center">
+                                                <div class="form-check mb-2 mr-sm-2">
+
+                                                    <div class="custom-control custom-checkbox"
+                                                        align="center">
+                                                        <input type="checkbox"
+                                                            class="custom-control-input"
+                                                            id="lightInt_auto_on_check3" checked="checked">
+                                                        <label class="custom-control-label"
+                                                            for="lightInt_auto_on_check3"></label>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control mr-sm-4 " type="number"
+                                                    min="0" max="1440" name="lightInt_timer3" id="lightInt_timer3">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+                <form class="form-inline justify-content-end">
+                    <button class="button btn btn-primary btn-lg mt-3 mb-2 mr-sm-4" id="Save_LightIntProg" data-toggle="tooltip" data-placement="top" title="Save Light interior Programming" type="button" style=" cursor : pointer;min-width: 100px">
+                        <i class="fa fa-save"></i>  Save
+                    </button>
+                </form>  
+                <div class="card-preloader">
+                    <div class="center-preloader d-flex align-items-center">
+                        <div class="spinners">
+                            <div class="spinner01"></div>
+                            <div class="spinner02"></div>
+                        </div>
+                    </div>
+                </div>                 
+            </div>
+            <!-- LIGHT INTERIOR pane END -->
+
+            <!-- LIGHT EXTERIOR pane START -->
+            <div class="tab-pane fade {% if tabpanel == 1 %} show active {% endif %}" id="LightExt" role="tabpanel">
+                <div class="form-group">
+                    <form class="form-inline justify-content-left">
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-lightbulb"></i></span>
+                            </div>
+                            {% if devicesNb.NbLightExt > 1 %}
+                            <select class="form-control " id="lightExt_select" style="min-height: 40px; min-width: 30px">
+                                {% for lightExt in devicesTab.LightExt %}
+                                <option value="{{lightExt.name}}" {% if lightExt.id == id %}selected="selected"{% endif %}>{{lightExt.name}}</option>
+                                {% endfor %}
+                            </select>
+                            {% else %}
+                            <input type="text" class="form-control" placeholder="{{lightExt.name}}" disabled>
+                            {% endif %}
+
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body table-responsive p-0" style="max-height: 500px;">
+                    <div class="table-wrap">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-head-fixed dt-responsive text-nowrap table-bordered" id="table_progpanel">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="form-inline justify-content-center">Applying
+                                                days</div>
+                                        </th>
+                                        <th>
+                                            <div class="form-inline justify-content-center">Working
+                                                from</div>
+                                        </th>
+                                        <th>
+                                            <div class="form-inline justify-content-center">To</div>
+                                        </th>
+                                        <th>
+                                            <div class="form-inline justify-content-center">Auto On
+                                                Status</div>
+                                        </th>
+                                        <th>
+                                            <div class="form-inline justify-content-center">Timer
+                                                beyond Work interval (in minutes)</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for day in days %}
+                                    <tr>
+                                        <td class="">
+                                            <div class="form-inline justify-content-center">
+                                                {{day}}
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time" name="lightExt_timeweek_from{{ loop.index0 }}" id="lightExt_timeweek_from{{ loop.index0 }}" align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time" name="lightExt_timeweek_to{{ loop.index0 }}" id="lightExt_timeweek_to{{ loop.index0 }}" align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <form class="form-inline justify-content-center">
+                                                <div class="form-check mb-2 mr-sm-2">
+
+                                                    <div class="custom-control custom-checkbox align-middle" align="center">
+                                                        <input type="checkbox" class="custom-control-input" id="lightExt_auto_on_check{{ loop.index0 }}" checked="checked">
+                                                        <label class="custom-control-label" for="lightExt_auto_on_check{{ loop.index0 }}"></label>
+                                                    </div>
+
+
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control mr-sm-4 " type="number" min="0" max="1440" name="lightExt_timer{{ loop.index0 }}" id="lightInt_timer{{ loop.index0 }}">
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    {#
+                                    <tr>
+                                        <td class="">
+                                            <div class="form-inline justify-content-center">
+                                                Monday to Friday
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time"
+                                                    name="lightExt_timeweek_from1" id="lightExt_timeweek_from1"
+                                                    align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time"
+                                                    name="lightExt_timeweek_to1" id="lightExt_timeweek_to1"
+                                                    align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <form class="form-inline justify-content-center">
+                                                <div class="form-check mb-2 mr-sm-2">
+
+                                                    <div class="custom-control custom-checkbox"
+                                                        align="center">
+                                                        <input type="checkbox"
+                                                            class="custom-control-input"
+                                                            id="lightExt_auto_on_check1" checked="checked">
+                                                        <label class="custom-control-label"
+                                                            for="lightExt_auto_on_check1"></label>
+                                                    </div>
+
+
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control mr-sm-4 " type="number"
+                                                    min="0" max="1440" name="lightExt_timer1" id="lightExt_timer1">
+
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                Saturday
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time"
+                                                    id="lightExt_timeweek_from2" align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time"
+                                                    id="lightExt_timeweek_to2" align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <form class="form-inline justify-content-center">
+                                                <div class="form-check mb-2 mr-sm-2">
+
+                                                    <div class="custom-control custom-checkbox"
+                                                        align="center">
+                                                        <input type="checkbox"
+                                                            class="custom-control-input"
+                                                            id="lightExt_auto_on_check2" checked="checked">
+                                                        <label class="custom-control-label"
+                                                            for="lightExt_auto_on_check2"></label>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control mr-sm-4 " type="number"
+                                                    min="0" max="1440" name="lightExt_timer2" id="lightExt_timer2">
+
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="">
+                                            <div class="form-inline justify-content-center">
+                                                Sunday
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time"
+                                                    name="lightExt_timeweek_from3" id="lightExt_timeweek_from3"
+                                                    align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control" type="time"
+                                                    name="lightExt_timeweek_to3" id="lightExt_timeweek_to3"
+                                                    align="center">
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+
+                                            <form class="form-inline justify-content-center">
+                                                <div class="form-check mb-2 mr-sm-2">
+
+                                                    <div class="custom-control custom-checkbox"
+                                                        align="center">
+                                                        <input type="checkbox"
+                                                            class="custom-control-input"
+                                                            id="lightExt_auto_on_check3" checked="checked">
+                                                        <label class="custom-control-label"
+                                                            for="lightExt_auto_on_check3"></label>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="form-inline justify-content-center">
+                                                <input class="form-control mr-sm-4 " type="number"
+                                                    min="0" max="1440" name="lightExt_timer3" id="lightExt_timer3">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+                <form class="form-inline mt-3 justify-content-end">
+                    <button class="button btn btn-primary btn-lg mb-2 mr-sm-4" id="Save_LightExtProg" type="button" style=" cursor : pointer;min-width: 100px">
+                        <i class="fa fa-save"></i>  Save
+                    </button>
+                </form>         
+                <div class="card-preloader">
+                    <div class="center-preloader d-flex align-items-center">
+                        <div class="spinners">
+                            <div class="spinner01"></div>
+                            <div class="spinner02"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- LIGHT EXTERIOR pane END -->
+            
+        </div>
+        <!-- Profile tabs END -->
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+  <script src="/js/smartHome.js"></script>
+  <script src="/js/lightsProgramming.js"></script>
+  
+{% endblock %}

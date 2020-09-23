@@ -1,0 +1,505 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello WebsocketController!{% endblock %}
+{% block stylesheet	%}
+    <style>
+        body {
+            font-family: arial;
+        }
+    
+        .form-group {
+            margin-bottom: 10px;
+        }
+    
+        input {
+            border: solid lightgrey 1px;
+            padding: 8px;
+        }
+    
+        label {
+            display: inline-block;
+            min-width: 150px;
+        }
+    
+        #chat {
+            height: 400px;
+            width: 600px;
+            border: solid lightgrey 1px;
+            overflow: auto;
+            margin-bottom: 20px;
+        }
+    
+        button {
+            padding: 6px 12px;
+        }
+    
+        .message {
+            padding: 10px 5px;
+            margin-bottom: 10px;
+            border-bottom: solid lightgrey 1px;
+        }
+    </style>
+    
+{% endblock %}
+
+{% block body %}
+    {#
+        <style>
+            .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+            .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+        </style>
+
+        <div class="example-wrapper">
+            <h1>Hello {{ controller_name }}! ✅</h1>
+
+            This friendly message is coming from:
+            <ul>
+                <li>Your controller at <code><a href="{{ 'C:/Users/PASCAL ALHADOUM/Documents/Projets/MBC/MyBuildingClever-SymWebsite/src/Controller/WebsocketController.php'|file_link(0) }}">src/Controller/WebsocketController.php</a></code></li>
+                <li>Your template at <code><a href="{{ 'C:/Users/PASCAL ALHADOUM/Documents/Projets/MBC/MyBuildingClever-SymWebsite/templates/websocket/index.html.twig'|file_link(0) }}">templates/websocket/index.html.twig</a></code></li>
+            </ul>
+        </div>
+    #}
+    {#{{dump(ws_url)}}#}
+    <div id="chat"></div>
+    <div>
+        <div class="form-group">
+            <label for="name">Name:</label> <input type="text" id="name" value="switch-light-1">
+        </div>
+        <div class="form-group">
+            <label for="message">Message:</label> <input type="text" id="message">
+        </div>
+        <div class="row">
+            <div class="col-9">
+                <button type="button" id="sendBtn">Send</button>
+            </div>  
+            <div class="col-3"><canvas id="led" width="30" height="30"></canvas></div>
+        </div>
+        
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    
+    <script type="text/javascript">
+		$(document).ready(function() {
+            var open = false;
+            var wsUrl = 'ws://' + window.location.hostname + ':1337';//'{{ ws_url }}';
+            console.log(wsUrl);
+            var mess = {
+                From: "user",
+                To: "switch-light-1",
+                Object: "Toggle",
+                message: "1"
+            }; 
+            /*const socket = new WebSocket('ws://' + wsUrl);
+        
+                socket.addEventListener("open", function() {
+                    //console.log("CONNECTED");
+                });
+
+                socket.addEventListener("message", function(e) {
+                    console.log(e.data);
+                    try
+                    {
+                        const message = JSON.parse(e.data);
+                        addMessage(message.name, message.message);
+                    }
+                    catch(e)
+                    {
+                        // Catch any errors
+                    }
+                });
+            */
+            init();
+            //function addMessage(name, message) {
+            function addMessage(message) {
+                //const messageHTML = "<div class='message'><strong>" + name + " :</strong> " + message + "</div>";
+                const messageHTML = "<div class='message'><strong>" + message + "</div>";
+                document.getElementById("chat").innerHTML += messageHTML
+            }   
+        
+            document.getElementById("sendBtn").addEventListener("click", function() {
+                //doSend(document.getElementById("message").value);
+                //mess.message = !parseInt(mess.message);
+                //mess.message =  (mess.message ? 1 : 0);
+                //addMessage(JSON.stringify(mess));
+                //doSend(JSON.stringify(mess));
+                /*const message = {
+                    name: document.getElementById("name").value,
+                    message: document.getElementById("message").value
+                };*/
+                //socket.send(JSON.stringify(message));
+                //addMessage(message.name, message.message);
+                if(!open){
+                     wsConnect(wsUrl);
+                     open = true;
+                }
+                else{
+                    websocket.close();
+                    open = false;
+                }
+            });
+
+            // This is called when the page finishes loading
+            function init() {
+
+                // Assign page elements to variables
+                canvas = document.getElementById("led");
+
+                // Draw circle in canvas
+                context = canvas.getContext("2d");
+                context.arc(15, 15, 5, 0, Math.PI * 2, false);
+                context.lineWidth = 3;
+                context.strokeStyle = "red";
+                context.stroke();
+                context.fillStyle = "red";
+                context.fill();
+
+                // Connect to WebSocket server
+                wsConnect(wsUrl);
+            }
+
+            // Call this to connect to the WebSocket server
+            function wsConnect(wsUrl) {
+
+                // Connect to WebSocket server
+                websocket = new WebSocket(wsUrl);
+
+                // Assign callbacks
+                websocket.onopen = function (evt) { onOpen(evt) };
+                websocket.onclose = function (evt) { onClose(evt) };
+                websocket.onmessage = function (evt) { onMessage(evt) };
+                websocket.onerror = function (evt) { onError(evt) };
+            }
+
+            // Called when a WebSocket connection is established with the server
+            function onOpen(evt) {
+
+                context.strokeStyle = "green";
+                context.stroke();
+                context.fillStyle = "green";
+                context.fill();
+                // Log connection state
+                console.log("Connected");
+                open = true;
+
+            }
+
+            // Called when the WebSocket connection is closed
+            function onClose(evt) {
+                context.strokeStyle = "red";
+                context.stroke();
+                context.fillStyle = "red";
+                context.fill();
+                // Log disconnection state
+                console.log("Disconnected");
+                open = false;
+                // Try to reconnect after a few seconds
+                //setTimeout(function () { wsConnect(wsUrl) }, 2000);
+            }
+
+            // Called when a message is received from the server
+            function onMessage(evt) {
+
+                // Print out our received message
+                console.log("type of evt.data: " + typeof evt.data);
+                console.log("Received: " + evt.data);
+                var str = String(evt.data);
+                console.log("str: " + str);
+                
+                //console.log("json : " + json);
+                addMessage(evt.data);
+                if(str.indexOf('Session Id =') >= 0){
+                    str = str.substring(str.indexOf('=')+1);
+                    console.log('My session Id = ' + str);
+                    mess.From = document.getElementById("name").value;
+                    mess.To = "Box";
+                    mess.Object = "Session Id";
+                    var msg = {
+                        Id: str,
+                        name: document.getElementById("name").value
+                    };
+                    mess.message = msg;
+                    doSend(JSON.stringify(mess));
+                }else{
+                    var json = JSON.parse(evt.data);
+                    switch(json.To){
+                        case document.getElementById("name").value:
+                            var temp = json.From;
+                            json.From = json.To;
+                            json.To = temp;
+                            doSend(JSON.stringify(json));
+                            break;
+                        case "Devices":
+                            if(json.Object === "Device Output Status"){
+                                json.From = document.getElementById("name").value;
+                                json.To = "user";
+                                json.message = getRandomInt(2);
+                                doSend(JSON.stringify(json));
+                            }
+                            break;
+                        case "2":
+                            console.log("case : 2");
+                        default:
+                            break;
+                    }
+                }
+                
+            }
+
+            // Called when a WebSocket error occurs
+            function onError(evt) {
+                console.log("ERROR: " + evt.data);
+                open = false;
+            }
+
+            // Sends a message to the server (and prints it to the console)
+            function doSend(message) {
+                console.log("Sending: " + message);
+                websocket.send(message);
+            }
+
+            // Called whenever the HTML button is pressed
+            function onPress() {
+                doSend("toggleLED");
+                doSend("getLEDState");
+                //doSend("getMeasurements");
+            }
+
+            function getRandomInt(max) {
+                return Math.floor(Math.random() * Math.floor(max));
+            }
+
+			// Get checkbox statuses from localStorage if available (IE)
+			if (localStorage) {
+
+				// Menu minifier status (Contract/expand side menu on large screens)
+				var checkboxValue = localStorage.getItem('minifier');
+
+				if (checkboxValue === 'true') {
+					$('#sidebar,#menu-minifier').addClass('mini');
+					$('#minifier').prop('checked', true);
+
+				} else {
+
+					if ($('#minifier').is(':checked')) {
+						$('#sidebar,#menu-minifier').addClass('mini');
+						$('#minifier').prop('checked', true);
+					} else {
+						$('#sidebar,#menu-minifier').removeClass('mini');
+						$('#minifier').prop('checked', false);
+					}
+				}
+
+				// Switch statuses
+				var switchValues = JSON.parse(localStorage.getItem('switchValues')) || {};
+
+				$.each(switchValues, function(key, value) {
+
+					// Apply only if element is included on the page
+					if ($('[data-unit="' + key + '"]').length) {
+
+						if (value === true) {
+
+							// Apply appearance of the "unit" and checkbox element
+							$('[data-unit="' + key + '"]').addClass("active");
+							$("#" + key).prop('checked', true);
+							$("#" + key).closest("label").addClass("checked");
+
+							//In case of Camera unit - play video
+							if (key === "switch-camera-1" || key === "switch-camera-2") {
+								$('[data-unit="' + key + '"] video')[0].play();
+							}
+
+						} else {
+							$('[data-unit="' + key + '"]').removeClass("active");
+							$("#" + key).prop('checked', false);
+							$("#" + key).closest("label").removeClass("checked");
+							if (key === "switch-camera-1" || key === "switch-camera-2") {
+								$('[data-unit="' + key + '"] video')[0].pause();
+							}
+						}
+					}
+				});
+			}
+
+
+			// Contract/expand side menu on click. (only large screens)
+			$('#minifier').click(function() {
+
+				$('#sidebar,#menu-minifier').toggleClass('mini');
+
+				// Save side menu status to localStorage if available (IE)
+				if (localStorage) {
+					checkboxValue = this.checked;
+					localStorage.setItem('minifier', checkboxValue);
+				}
+
+			});
+
+
+			// Side menu toogler for medium and small screens
+			$('[data-toggle="offcanvas"]').click(function() {
+				$('.row-offcanvas').toggleClass('active');
+			});
+
+
+			// Switch (checkbox element) toogler
+			$('.switch input[type="checkbox"]').on("change", function(t) {
+
+				// Check the time between changes to prevert Android native browser execute twice
+				// If you dont need support for Android native browser - just call "switchSingle" function
+				if (this.last) {
+
+					this.diff = t.timeStamp - this.last;
+
+					// Don't execute if the time between changes is too short (less than 250ms) - Android native browser "twice bug"
+					// The real time between two human taps/clicks is usually much more than 250ms"
+					if (this.diff > 250) {
+
+						this.last = t.timeStamp;
+
+						iot.switchSingle(this.id, this.checked);
+
+					} else {
+						return false;
+					}
+
+				} else {
+
+					// First attempt on this switch element
+					this.last = t.timeStamp;
+
+					iot.switchSingle(this.id, this.checked);
+
+				}
+			});
+
+			// All ON/OFF controls
+			$('.lights-control').click(function() {
+
+				var target = $(this).closest('.lights-controls').data('controls');
+				var action = $(this).data('action');
+
+				iot.switchGroup(target, action);
+			});
+
+			// Reposition to center when a modal is shown
+			$('.modal.centered').on('show.bs.modal', iot.centerModal);
+
+			// Reset/Stop countdown timer (EXIT NOW)
+			$('#armModal').on('hide.bs.modal', iot.clearCountdown);
+
+			// Garage doors controls
+			$('.doors-control').click(function() {
+
+				var target = $(this).closest('.timer-controls').data('controls');
+				var action = $(this).data('action');
+
+				iot.garageDoors(target, action);
+			});
+
+			// Alerts "Close" callback - hide modal and alert indicator dot when user closes all alerts
+			$('#alertsModal .alert').on('close.bs.alert', function() {
+				var sum = $('#alerts-toggler').attr('data-alerts');
+				sum = sum - 1;
+				$('#alerts-toggler').attr('data-alerts', sum);
+
+				if (sum === 0) {
+					$('#alertsModal').modal('hide');
+					$('#alerts-toggler').attr('data-toggle', 'none');
+
+				}
+
+			});
+
+			// Show/hide tips (popovers) - FAB button (right bottom on large screens)
+			$('#info-toggler').click(function() {
+
+				if ($('body').hasClass('info-active')) {
+					$('[data-toggle="popover-all"]').popover('hide');
+					$('body').removeClass('info-active');
+				} else {
+					$('[data-toggle="popover-all"]').popover('show');
+					$('body').addClass('info-active');
+				}
+			});
+
+			// Hide tips (popovers) by clicking outside
+			$('body').on('click', function(pop) {
+
+				if (pop.target.id !== 'info-toggler' && $('body').hasClass('info-active')) {
+					$('[data-toggle="popover-all"]').popover('hide');
+					$('body').removeClass('info-active');
+				}
+
+			});
+
+		});
+
+		// Apply necessary changes, functionality when content is loaded
+		$(window).on('load', function() {
+
+			// This script is necessary for cross browsers icon sprite support (IE9+, ...) 
+			svg4everybody();
+
+			// Washing machine - demonstration of running program/cycle
+			$('#wash-machine').timer({
+				countdown: true,
+				format: '%H:%M:%S',
+				duration: '1h17m10s',
+				callback: function() {
+					$('[data-unit="wash-machine"]').removeClass("active");
+				}
+			});
+
+			if ($('[data-unit="switch-camera-1"]').hasClass("active")) {
+				var activeVideo = $('[data-unit="switch-camera-1"] video').get(0);
+
+				if (activeVideo.paused) {
+					activeVideo.autoplay = true;
+					activeVideo.load();
+					activeVideo.play();
+				} else {
+					activeVideo.pause();
+				}
+			}
+
+			if ($('[data-unit="switch-camera-2"]').hasClass("active")) {
+				var activeVideo = $('[data-unit="switch-camera-2"] video').get(0);
+
+				if (activeVideo.paused) {
+					activeVideo.autoplay = true;
+					activeVideo.load();
+					activeVideo.play();
+				} else {
+					activeVideo.pause();
+				}
+			}
+
+			// "Timeout" function is not neccessary - important is to hide the preloader overlay
+			setTimeout(function() {
+
+				// Hide preloader overlay when content is loaded
+				$('#iot-preloader,.card-preloader').fadeOut();
+				$("#wrapper").removeClass("hidden");
+
+				// Check for Main contents scrollbar visibility and set right position for FAB button
+				iot.positionFab();
+
+			}, 800);
+
+		});
+
+		// Apply necessary changes if window resized
+		$(window).on('resize', function() {
+
+			// Modal reposition when the window is resized
+			$('.modal.centered:visible').each(iot.centerModal);
+
+			// Check for Main contents scrollbar visibility and set right position for FAB button
+			iot.positionFab();
+		});
+
+	</script>
+{% endblock %}

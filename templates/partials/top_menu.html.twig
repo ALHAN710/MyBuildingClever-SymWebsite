@@ -1,0 +1,84 @@
+<nav class="navbar navbar-expand fixed-top d-flex flex-row justify-content-start">
+    <div class="d-none d-lg-block"> {#  #}
+        <form>
+            <div id="menu-minifier">
+                <label>
+                    <svg width="32" height="32" viewbox="0 0 32 32">
+                        <rect x="2" y="8" width="4" height="3" class="menu-dots"></rect>
+                        <rect x="2" y="15" width="4" height="3" class="menu-dots"></rect>
+                        <rect x="2" y="22" width="4" height="3" class="menu-dots"></rect>
+                        <rect x="8" y="8" width="21" height="3" class="menu-lines"></rect>
+                        <rect x="8" y="15" width="21" height="3" class="menu-lines"></rect>
+                        <rect x="8" y="22" width="21" height="3" class="menu-lines"></rect>
+                    </svg>
+                    <input id="minifier" type="checkbox">
+                </label>
+                <div class="info-holder info-rb">
+                    <div data-toggle="popover-all" data-content="Checkbox element using localStorage to remember the last status." data-original-title="Side menu narrowing" data-placement="right"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    {#<div class="nav-item d-lg-none d-xl-block">
+        <a class="nav-link active" href="{{ path("home_page") }}">
+            <svg class="icon-sprite"><use xlink:href="/images/icons-sprite.svg#home"/></svg> 
+        </a>
+    </div>
+    #}
+    <div class="nav-item d-lg-none">
+        <button id="sidebar-toggler" type="button" class="btn btn-link nav-link" data-toggle="offcanvas">
+            <svg class="icon-sprite"><use xlink:href="/images/icons-sprite.svg#menu"/></svg>
+        </button>
+    </div>
+    {#<a class="navbar-brand px-lg-3 px-1 mr-0 d-none d-lg-block d-xl-none" href="#"><h6>CLEVER ELECTRIC Technologies</h6></a> 
+    <!-- d-none d-sm-block d-md-none d-lg-block 
+    <a class="navbar-brand px-lg-3 px-1 mr-0 " href="#">
+        <svg class="icon-sprite icon">
+             <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/> 
+            <use style="background-color: white; width: 1rem; height: 2rem;" xlink:href="/images/logoCLETech.svg#Calque_1"/>
+        </svg>
+        
+    </a>
+    -->
+    #}
+    <div class="ml-auto">
+        <div class="navbar-nav flex-row navbar-icons">
+            <!--
+            <div class="nav-item">
+                <button id="alerts-toggler" class="btn btn-link nav-link" title="Alerts" type="button" data-alerts="3" data-toggle="modal" data-target="#alertsModal">
+                    <svg class="icon-sprite">
+                        <use xlink:href="/images/icons-sprite.svg#alert"/>
+                        <svg class="text-danger"><use class="icon-dot" xlink:href="/images/icons-sprite.svg#icon-dot"/></svg>
+                    </svg>
+                </button>
+            </div> 
+            -->
+            <div id="user-menu" class="nav-item dropdown">
+                <button class="btn btn-link nav-link dropdown-toggle" title="User" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <svg class="icon-sprite"><use xlink:href="/images/icons-sprite.svg#user"/></svg>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">{#  #}
+                    <a class="dropdown-item" href="{{ path('account_profile', {'id': user.id}) }}"><i class="fa fa-user pull-right"></i>Profile</a>
+                    <a class="dropdown-item" href="{{ path('account_password', {'id': user.id}) }}"><i class="fa fa-edit pull-right"></i>Password</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ path('account_logout') }}"><i class="dripicons-exit pull-right"></i>Logout</a>
+                </div>
+            </div>
+            <div class="nav-item d-lg-none d-xl-block">
+                <!--
+                <button id="sidebar-toggler" type="button" class="btn btn-link nav-link" data-toggle="offcanvas">
+                    <svg class="icon-sprite"><use xlink:href="/images/icons-sprite.svg#menu"/></svg>
+                </button> 
+                -->
+                {% if is_granted('ROLE_ADMIN') == true %}
+                    
+                    <a class="nav-link" href="{{path("super_admin_settings")}}">
+                        <svg class="icon-sprite"><use xlink:href="/images/icons-sprite.svg#settings"/></svg>
+                    </a>
+                   
+                {% endif	%}
+            </div>
+        </div>
+    </div>
+</nav>

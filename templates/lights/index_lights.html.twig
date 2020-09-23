@@ -1,0 +1,866 @@
+{%	extends 'base.html.twig' %}
+
+{% block title	%}
+	Home
+{%	endblock	%}
+
+{% block stylesheet	%}
+    
+{% endblock	%}
+
+{%	block body	%}
+	
+    {% if devicesNb.NbLightInt > 0 %}
+        <!-- Interior lights START -->
+        <div class="row" data-unit-group="switch-lights-in">
+            {% if devicesNb.NbLightInt > 1 %}
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                    <!-- ON/OFF all interior lights  START -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">Interior Lights</h3>
+                        </div>
+                        <hr class="my-0">
+                        <div class="card-body">
+                            <div class="lights-controls" data-controls="switch-lights-in">
+                                <button data-action="all-on" type="button" class="btn btn-primary mr-2 lights-control">All <strong>ON</strong></button>
+                                <button data-action="all-off" type="button" class="btn btn-secondary lights-control">All <strong>OFF</strong></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ON/OFF all interior lights  END -->
+                </div>
+            {% endif %}
+            {% for lightInt in devicesTab.LightInt %}
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                    <!-- Light unit START -->
+                    <div class="card" data-unit="switch-light-{{lightInt.moduleId}}">
+                        <!-- Light switch START -->
+                        <div class="card-body d-flex flex-row justify-content-start">
+                            <svg class="icon-sprite">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                            </svg>
+                            <h5>{{lightInt.name}}</h5>
+                            <label class="switch ml-auto">
+                                <input type="checkbox" id="switch-light-{{lightInt.moduleId}}">
+                            </label>
+                        </div>
+                        <!-- Light switch END -->
+                        <hr class="my-0">
+                        <!-- Bulb details START -->
+                        <ul class="list-group borderless px-1">
+                            <li class="list-group-item">
+                                <p class="specs">Connection</p>
+                                {#<p class="ml-auto mb-0 text-success">OK</p>#}
+                                <p class="ml-auto mb-0"><canvas id="led-{{lightInt.moduleId}}" data-entry-led="switch-light-{{lightInt.moduleId}}" data-entry-ledid="led-{{lightInt.moduleId}}" width="30" height="30"></canvas></p>
+                            </li>
+                            <li class="list-group-item pt-0">
+                                <p class="specs">Programming</p>
+                                <p class="ml-auto mb-0"><a href="{{path("lights_programming", {"id":lightInt.id,"tabpanel":0})}}"><i class="fa fa-clock"></i></a></p>
+                            </li>
+                            <li class="list-group-item pt-0">
+                                <p class="specs">Mean Power</p>
+                                <p class="ml-auto mb-0">24W</p>
+                            </li>
+                            <li class="list-group-item pt-0 pb-4">
+                                <p class="specs">Voltage range</p>
+                                <p class="ml-auto mb-0">110-130V</p>
+                            </li>
+                        </ul>
+                        <!-- Bulb details END -->
+                        {#
+                            <hr class="my-0">
+                            <!-- Dimmer control - range slider START -->
+                            <ul class="list-group borderless px-1" data-rangeslider="dimmer-light-1">
+                                <li class="list-group-item">
+                                    <p class="specs">Dim</p>
+                                    <p class="ml-auto mb-0"><span class="range-output">100</span>%</p>
+                                </li>
+                                <li class="list-group-item pt-0 pb-4">
+                                    <input id="dimmer-light-1" type="range" min="10" max="100" value="100">
+                                </li>
+                            </ul>
+                        #}
+                        <div class="info-holder info-cb">
+                            <div data-toggle="popover-all" data-content="jQuery range slider using localStorage to remember the last status." data-original-title="Dimmer control" data-placement="top" data-offset="0,-24"></div>
+                        </div>
+                        <!-- Dimmer control - range slider END -->
+                    </div>
+                    <!-- Light unit END -->
+                </div>
+            {% endfor %}
+            {#
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                    <!-- Light unit START -->
+                    <div class="card active" data-unit="switch-light-2">
+                        <!-- Light switch START -->
+                        <div class="card-body d-flex flex-row justify-content-start">
+                            <svg class="icon-sprite">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                            </svg>
+                            <h5>Dining room</h5>
+                            <label class="switch ml-auto">
+                                <input type="checkbox" id="switch-light-2">
+                            </label>
+                        </div>
+                        <!-- Light switch END -->
+                        <hr class="my-0">
+                        <!-- Bulb details START -->
+                        <ul class="list-group borderless px-1">
+                            <li class="list-group-item">
+                                <p class="specs">Connection</p>
+                                <p class="ml-auto mb-0 text-success">OK</p>
+                            </li>
+                            <li class="list-group-item pt-0">
+                                <p class="specs">Power Consumption</p>
+                                <p class="ml-auto mb-0">18W</p>
+                            </li>
+                            <li class="list-group-item pt-0 pb-4">
+                                <p class="specs">Voltage range</p>
+                                <p class="ml-auto mb-0">110-130V</p>
+                            </li>
+                        </ul>
+                        <!-- Bulb details END -->
+                        <hr class="my-0">
+                        <!-- Dimmer control - range slider START -->
+                        <ul class="list-group borderless px-1" data-rangeslider="dimmer-light-2">
+                            <li class="list-group-item">
+                                <p class="specs">Dim</p>
+                                <p class="ml-auto mb-0"><span class="range-output">100</span>%</p>
+                            </li>
+                            <li class="list-group-item pt-0 pb-4">
+                                <input id="dimmer-light-2" type="range" min="10" max="100" value="100">
+                            </li>
+                        </ul>
+                        <!-- Dimmer control - range slider END -->
+                    </div>
+                    <!-- Light unit END -->
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                    <!-- Light unit START -->
+                    <div class="card active" data-unit="switch-light-3">
+                        <!-- Light switch START -->
+                        <div class="card-body d-flex flex-row justify-content-start">
+                            <svg class="icon-sprite">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                            </svg>
+                            <h5>Living room</h5>
+                            <label class="switch ml-auto">
+                                <input type="checkbox" id="switch-light-3">
+                            </label>
+                        </div>
+                        <!-- Light switch END -->
+                        <hr class="my-0">
+                        <!-- Bulb details START -->
+                        <ul class="list-group borderless px-1">
+                            <li class="list-group-item">
+                                <p class="specs">Connection</p>
+                                <p class="ml-auto mb-0 text-success">OK</p>
+                            </li>
+                            <li class="list-group-item pt-0">
+                                <p class="specs">Power Consumption</p>
+                                <p class="ml-auto mb-0">24W</p>
+                            </li>
+                            <li class="list-group-item pt-0 pb-4">
+                                <p class="specs">Voltage range</p>
+                                <p class="ml-auto mb-0">110-130V</p>
+                            </li>
+                        </ul>
+                        <!-- Bulb details END -->
+                        <hr class="my-0">
+                        <!-- Dimmer control - range slider START -->
+                        <ul class="list-group borderless px-1" data-rangeslider="dimmer-light-3">
+                            <li class="list-group-item">
+                                <p class="specs">Dim</p>
+                                <p class="ml-auto mb-0"><span class="range-output">100</span>%</p>
+                            </li>
+                            <li class="list-group-item pt-0 pb-4">
+                                <input id="dimmer-light-3" type="range" min="10" max="100" value="100">
+                            </li>
+                        </ul>
+                        <!-- Dimmer control - range slider END -->
+                    </div>
+                    <!-- Light unit END -->
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                    <!-- Light unit START -->
+                    <div class="card active" data-unit="switch-light-4">
+                        <!-- Light switch START -->
+                        <div class="card-body d-flex flex-row justify-content-start">
+                            <svg class="icon-sprite">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                            </svg>
+                            <h5>Bedroom</h5>
+                            <label class="switch ml-auto">
+                                <input type="checkbox" id="switch-light-4">
+                            </label>
+                        </div>
+                        <!-- Light switch END -->
+                        <hr class="my-0">
+                        <!-- Bulb details START -->
+                        <ul class="list-group borderless px-1">
+                            <li class="list-group-item">
+                                <p class="specs">Connection</p>
+                                <p class="ml-auto mb-0 text-success">OK</p>
+                            </li>
+                            <li class="list-group-item pt-0">
+                                <p class="specs">Power Consumption</p>
+                                <p class="ml-auto mb-0">15W</p>
+                            </li>
+                            <li class="list-group-item pt-0 pb-4">
+                                <p class="specs">Voltage range</p>
+                                <p class="ml-auto mb-0">110-130V</p>
+                            </li>
+                        </ul>
+                        <!-- Bulb details END -->
+                        <hr class="my-0">
+                        <!-- Dimmer control - range slider START -->
+                        <ul class="list-group borderless px-1" data-rangeslider="dimmer-light-4">
+                            <li class="list-group-item">
+                                <p class="specs">Dim</p>
+                                <p class="ml-auto mb-0"><span class="range-output">65</span>%</p>
+                            </li>
+                            <li class="list-group-item pt-0 pb-4">
+                                <input id="dimmer-light-4" type="range" min="10" max="100" value="65">
+                            </li>
+                        </ul>
+                        <!-- Dimmer control - range slider END -->
+                    </div>
+                    <!-- Light unit END -->
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                    <!-- Light unit START -->
+                    <div class="card active" data-unit="switch-light-5">
+                        <!-- Light switch START -->
+                        <div class="card-body d-flex flex-row justify-content-start">
+                        <svg class="icon-sprite">
+                            <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                            <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                        </svg>
+                        <h5>Bathroom</h5>
+                        <label class="switch ml-auto">
+                            <input type="checkbox" id="switch-light-5">
+                        </label>
+                        </div>
+                        <!-- Light switch END -->
+                        <hr class="my-0">
+                        <!-- Bulb details START -->
+                        <ul class="list-group borderless px-1">
+                        <li class="list-group-item">
+                            <p class="specs">Connection</p>
+                            <p class="ml-auto mb-0 text-success">OK</p>
+                        </li>
+                        <li class="list-group-item pt-0">
+                            <p class="specs">Power Consumption</p>
+                            <p class="ml-auto mb-0">18W</p>
+                        </li>
+                        <li class="list-group-item pt-0 pb-4">
+                            <p class="specs">Voltage range</p>
+                            <p class="ml-auto mb-0">110-130V</p>
+                        </li>
+                        </ul>
+                        <!-- Bulb details END -->
+                        <hr class="my-0">
+                        <!-- Dimmer control - range slider START -->
+                        <ul class="list-group borderless px-1" data-rangeslider="dimmer-light-5">
+                        <li class="list-group-item">
+                            <p class="specs">Dim</p>
+                            <p class="ml-auto mb-0"><span class="range-output">100</span>%</p>
+                        </li>
+                        <li class="list-group-item pt-0 pb-4">
+                            <input id="dimmer-light-5" type="range" min="10" max="100" value="100">
+                        </li>
+                        </ul>
+                        <!-- Dimmer control - range slider END -->
+                        </div>                    
+                    
+                    
+                    <!-- Light unit END -->
+                </div>
+            #}
+        </div>
+        <!-- Interior lights END -->
+    {% endif %}
+    {% if devicesNb.NbLightExt > 0 %}
+        <hr class="my-2">
+        <!-- Exterior lights START -->
+        <div class="row" data-unit-group="switch-lights-ex">
+            {% if devicesNb.NbLightInt > 1 %}
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                    <!-- ON/OFF all interior lights  START -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">Exterior Lights</h3>
+                        </div>
+                        <hr class="my-0">
+                        <div class="card-body">
+                            <div class="lights-controls" data-controls="switch-lights-ex">
+                                <button data-action="all-on" type="button" class="btn btn-primary mr-2 lights-control">All <strong>ON</strong></button>
+                                <button data-action="all-off" type="button" class="btn btn-secondary lights-control">All <strong>OFF</strong></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ON/OFF all interior lights  END -->
+                </div>
+            {% endif %}
+            {% for lightExt in devicesTab.LightExt %}
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                    <div class="card" data-unit="switch-light-{{lightExt.moduleId}}">
+                        <!-- Light switch START -->
+                        <div class="card-body d-flex flex-row justify-content-start">
+                            <svg class="icon-sprite">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                            </svg>
+                            <h5>{{lightExt.name}}</h5>
+                            <label class="switch ml-auto">
+                                <input type="checkbox" id="switch-light-{{lightExt.moduleId}}">
+                            </label>
+                        </div>
+                        <!-- Light switch END -->
+                        <hr class="my-0">
+                        <!-- Bulb details START -->
+                        <ul class="list-group borderless px-1">
+                            <li class="list-group-item">
+                                <p class="specs">Connection</p>
+                                {#<p class="ml-auto mb-0 text-success">OK</p>#}
+                                <div class="ml-auto mb-0"><canvas id="led-{{lightExt.moduleId}}" data-entry-led="switch-light-{{lightExt.moduleId}}" data-entry-ledid="led-{{lightExt.moduleId}}" width="30" height="30"></canvas></div>
+                            </li>
+                            <li class="list-group-item pt-0">
+                                <p class="specs">Programming</p>
+                                <p class="ml-auto mb-0"><a href="{{path("lights_programming", {"id":lightExt.id,"tabpanel":1})}}"><i class="fa fa-clock"></i></a></p>
+                            </li>
+                            <li class="list-group-item pt-0">
+                                <p class="specs">Mean Power</p>
+                                <p class="ml-auto mb-0">15W</p>
+                            </li>
+                            <li class="list-group-item pt-0 pb-4">
+                                <p class="specs">Voltage range</p>
+                                <p class="ml-auto mb-0">110-130V</p>
+                            </li>
+                        </ul>
+                        <!-- Bulb details END -->
+                    </div>
+                </div>
+            {% endfor %}                    
+        </div>
+        <!-- Exterior lights END -->
+    {% endif %}
+    	
+{% endblock %}
+
+{% block javascripts %}
+    
+    <script src="/js/smartHome.js"></script>
+    {#
+    <script>
+		$(document).ready(function() {
+
+            var wsUrl = 'ws://' + '{{ ws_url }}';
+            console.log(wsUrl);
+            var mess = {
+                From: "user",
+                To: "light",
+                Object: "Toggle",
+                message: "on"
+            }; 
+            function wsMessageProcessing(jsonMessage){
+                var To = jsonMessage.To;
+                var From = jsonMessage.From;
+                var mess = jsonMessage.message;
+                var object = jsonMessage.Object;
+                var role = jsonMessage.role;
+            }
+            init();
+                    
+            // This is called when the page finishes loading
+            function init() {
+
+                // Assign page elements to variables
+                /*canvas = document.getElementById("led");
+
+                // Draw circle in canvas
+                context = canvas.getContext("2d");
+                context.arc(15, 15, 5, 0, Math.PI * 2, false);
+                context.lineWidth = 3;
+                context.strokeStyle = "red";
+                context.stroke();
+                context.fillStyle = "red";
+                context.fill();*/
+
+                // Connect to WebSocket server
+                wsConnect(wsUrl);
+            }
+
+            // Call this to connect to the WebSocket server
+            function wsConnect(wsUrl) {
+
+                // Connect to WebSocket server
+                websocket = new WebSocket(wsUrl);
+
+                // Assign callbacks
+                websocket.onopen = function (evt) { onOpen(evt) };
+                websocket.onclose = function (evt) { onClose(evt) };
+                websocket.onmessage = function (evt) { onMessage(evt) };
+                websocket.onerror = function (evt) { onError(evt) };
+            }
+
+            // Called when a WebSocket connection is established with the server
+            function onOpen(evt) {
+
+                /*context.strokeStyle = "green";
+                context.stroke();
+                context.fillStyle = "green";
+                context.fill();*/
+                // Log connection state
+                console.log("Connected");
+
+            }
+
+            // Called when the WebSocket connection is closed
+            function onClose(evt) {
+                /*context.strokeStyle = "red";
+                context.stroke();
+                context.fillStyle = "red";
+                context.fill();*/
+                // Log disconnection state
+                console.log("Disconnected");
+
+                // Try to reconnect after a few seconds
+                setTimeout(function () { wsConnect(wsUrl) }, 2000);
+            }
+
+            // Called when a message is received from the server
+            function onMessage(evt) {
+
+                // Print out our received message
+                //console.log("type of evt.data: " + typeof evt.data);
+                console.log("Received: " + evt.data);
+                var str = String(evt.data);
+                //console.log("str: " + str);
+                var json= JSON.parse(evt.data);
+                //console.log("json : " + json);
+                //$("#" + json.To).prop('checked', parseInt(json.message));
+                //$("#" + key).closest("label").addClass("checked");
+                console.log(parseInt(json.message));
+                var status;
+
+                switch (json.To) {
+                    case "user":
+                        status = (parseInt(json.message) === 1) ? true : false;
+                        $('[data-unit="' + json.From + '"]').toggleClass("active");
+                        //$('#' + json.To).closest("label").toggleClass("checked", status);
+                        
+                        $("#" + json.From).prop('checked', status);
+                        if(status) $("#" + json.From).closest("label").addClass("checked");
+                        else $("#" + json.From).closest("label").removeClass("checked");
+                        break;
+                    case "S0=HIGH":
+                        console.log("LED is on");
+                        setBouton('ECL1', 1);
+                        break;
+                    case "2":
+                        console.log("case : 2");
+                    default:
+                        break;
+                }
+            }
+
+            // Called when a WebSocket error occurs
+            function onError(evt) {
+                console.log("ERROR: " + evt.data);
+            }
+
+            // Sends a message to the server (and prints it to the console)
+            function doSend(message) {
+                console.log("Sending: " + message);
+                websocket.send(message);
+            }
+
+            // Called whenever the HTML button is pressed
+            function onPress() {
+                doSend("toggleLED");
+                doSend("getLEDState");
+                //doSend("getMeasurements");
+            }
+
+			// Get checkbox statuses from localStorage if available (IE)
+			if (localStorage) {
+
+				// Menu minifier status (Contract/expand side menu on large screens)
+				var checkboxValue = localStorage.getItem('minifier');
+
+				if (checkboxValue === 'true') {
+					$('#sidebar,#menu-minifier').addClass('mini');
+					$('#minifier').prop('checked', true);
+
+				} else {
+
+					if ($('#minifier').is(':checked')) {
+						$('#sidebar,#menu-minifier').addClass('mini');
+						$('#minifier').prop('checked', true);
+					} else {
+						$('#sidebar,#menu-minifier').removeClass('mini');
+						$('#minifier').prop('checked', false);
+					}
+				}
+
+				// Switch statuses
+				//var switchValues = JSON.parse(localStorage.getItem('switchValues')) || {};
+
+				/*$.each(switchValues, function(key, value) {
+
+					// Apply only if element is included on the page
+					if ($('[data-unit="' + key + '"]').length) {
+
+						if (value === true) {
+
+							// Apply appearance of the "unit" and checkbox element
+							$('[data-unit="' + key + '"]').addClass("active");
+							$("#" + key).prop('checked', true);
+							$("#" + key).closest("label").addClass("checked");
+
+							//In case of Camera unit - play video
+							if (key === "switch-camera-1" || key === "switch-camera-2") {
+								$('[data-unit="' + key + '"] video')[0].play();
+							}
+
+						} else {
+							$('[data-unit="' + key + '"]').removeClass("active");
+							$("#" + key).prop('checked', false);
+							$("#" + key).closest("label").removeClass("checked");
+							if (key === "switch-camera-1" || key === "switch-camera-2") {
+								$('[data-unit="' + key + '"] video')[0].pause();
+							}
+						}
+					}
+				});*/
+			}
+
+
+			// Contract/expand side menu on click. (only large screens)
+			$('#minifier').click(function() {
+
+				$('#sidebar,#menu-minifier').toggleClass('mini');
+
+				// Save side menu status to localStorage if available (IE)
+				if (localStorage) {
+					checkboxValue = this.checked;
+					localStorage.setItem('minifier', checkboxValue);
+				}
+
+			});
+
+
+			// Side menu toogler for medium and small screens
+			$('[data-toggle="offcanvas"]').click(function() {
+				$('.row-offcanvas').toggleClass('active');
+			});
+
+
+			// Switch (checkbox element) toogler
+			$('.switch input[type="checkbox"]').on("change", function(t) {
+
+				// Check the time between changes to prevert Android native browser execute twice
+				// If you dont need support for Android native browser - just call "switchSingle" function
+				if (this.last) {
+
+					this.diff = t.timeStamp - this.last;
+
+					// Don't execute if the time between changes is too short (less than 250ms) - Android native browser "twice bug"
+					// The real time between two human taps/clicks is usually much more than 250ms"
+					if (this.diff > 250) {
+
+						this.last = t.timeStamp;
+                        mess.To = this.id;
+                        mess.message =  (this.checked ? 1 : 0);
+                        
+                        //message.To = "moi";
+                        doSend(JSON.stringify(mess));
+                        this.checked = !this.checked;
+                        //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                        //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                        console.log('id = ' + this.id);
+                        console.log('checked = ' + this.checked);
+						//iot.switchSingle(this.id, this.checked);
+
+					} else {
+						return false;
+					}
+
+				} else {
+
+					// First attempt on this switch element
+					this.last = t.timeStamp;
+                    mess.To = this.id;
+                    mess.message = (this.checked ? 1 : 0);
+                    
+                    doSend(JSON.stringify(mess));
+                    this.checked = !this.checked;
+                    //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                    //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                    console.log('id = ' + this.id);
+                    console.log('checked = ' + this.checked);
+                    //iot.switchSingle(this.id, this.checked);
+
+				}
+			});
+
+			// All ON/OFF controls
+			$('.lights-control').click(function() {
+
+				var target = $(this).closest('.lights-controls').data('controls');
+				var action = $(this).data('action');
+                console.log('target = ' + target);
+                console.log('action = ' + action);
+				//iot.switchGroup(target, action);
+                var el = '[data-unit-group="' + target + '"]';
+                var key;
+                var id;
+                var status;
+                // Apply changes based on action
+                switch (action) {
+
+                    case 'all-on':
+                        $(el + ' [data-unit]').each(function () {
+                            //console.log(this);
+                            key = $(this).data('unit');
+                            id = "#" + key;
+                            //$(this).addClass("active");
+                            //$("#" + key).prop('checked', true);
+                            //$("#" + key).closest("label").addClass("checked");
+
+                            status = $(id).is(':checked');
+                            if(!status){
+                                mess.To = key;
+                                mess.message = 1;
+                                
+                                //message.To = "moi";
+                                doSend(JSON.stringify(mess));
+                                //$(id).prop('checked', !status);
+                                //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                                //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                                console.log('id = ' + key);
+                                console.log('checked = ' + status);
+                                //switchValues[key] = true;
+                            }   
+
+                        });
+                    break;
+                    case 'all-off':
+                        $(el + ' [data-unit]').each(function () {
+                            key = $(this).data('unit');
+                            id = "#" + key;
+                            //$(this).addClass("active");
+                            //$("#" + key).prop('checked', true);
+                            //$("#" + key).closest("label").addClass("checked");
+
+                            status = $(id).is(':checked');
+                            if(status){
+                                mess.To = key;
+                                mess.message = 0;
+                                
+                                //message.To = "moi";
+                                doSend(JSON.stringify(mess));
+                                //$(id).prop('checked', !status);
+                                //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                                //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                                console.log('id = ' + key);
+                                console.log('checked = ' + status);
+                                //switchValues[key] = true;
+                            }
+                        });
+                    break;
+                }
+
+			});
+
+			// Reposition to center when a modal is shown
+			$('.modal.centered').on('show.bs.modal', iot.centerModal);
+
+			// Alerts "Close" callback - hide modal and alert indicator dot when user closes all alerts
+			$('#alertsModal .alert').on('close.bs.alert', function() {
+				var sum = $('#alerts-toggler').attr('data-alerts');
+				sum = sum - 1;
+				$('#alerts-toggler').attr('data-alerts', sum);
+
+				if (sum === 0) {
+					$('#alertsModal').modal('hide');
+					$('#alerts-toggler').attr('data-toggle', 'none');
+
+				}
+
+			});
+
+			// Show/hide tips (popovers) - FAB button (right bottom on large screens)
+			$('#info-toggler').click(function() {
+
+				if ($('body').hasClass('info-active')) {
+					$('[data-toggle="popover-all"]').popover('hide');
+					$('body').removeClass('info-active');
+				} else {
+					$('[data-toggle="popover-all"]').popover('show');
+					$('body').addClass('info-active');
+				}
+			});
+
+			// Hide tips (popovers) by clicking outside
+			$('body').on('click', function(pop) {
+
+				if (pop.target.id !== 'info-toggler' && $('body').hasClass('info-active')) {
+					$('[data-toggle="popover-all"]').popover('hide');
+					$('body').removeClass('info-active');
+				}
+
+			});
+
+            // Data binding for numeric representation of range slider
+            $(document).on('input', 'input[type="range"]', function() {
+                $('[data-rangeslider="' + this.id + '"] .range-output').html(this.value);
+            });
+
+            // Bar Chart initialization settings - Chartist.js
+
+            var data01 = {
+                // Labels array that can contain any sort of values
+                labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                // Series array that contains series objects or in this case series data arrays
+                series: [{
+                    "name": "Kitchen",
+                    "data": [7, 4, 6, 5, 6, 3, 8]
+                },
+                {
+                    "name": "Dining room",
+                    "data": [3, 1, 1, 2, 1, 2, 2]
+                },
+                {
+                    "name": "Living room",
+                    "data": [6, 2, 3, 4, 2, 5, 7]
+                },
+                {
+                    "name": "Bedroom",
+                    "data": [2, 1, 1, 1, 1, 2, 3]
+                },
+                {
+                    "name": "Bathroom",
+                    "data": [6, 5, 6, 7, 5, 12, 9]
+                }
+                ]
+            };
+
+            var options01 = {
+                axisY: {
+                labelInterpolationFnc: function(value) {
+                    return value + 'h'
+                }
+                },
+                height: 240,
+                high: 14,
+                low: 0,
+                scaleMinSpace: 6,
+                onlyInteger: false,
+                referenceValue: 0,
+                seriesBarDistance: 8,
+                plugins: [
+                Chartist.plugins.legend({
+                    position: 'bottom'
+                })
+                ]
+            };
+
+            var responsive_steps01 = [
+                // Show only every second label
+                ['screen and (max-width: 768px)', {
+                axisX: {
+                    labelInterpolationFnc: function skipLabels(value, index, labels) {
+                    return index % 2 === 0 ? value : null;
+                    }
+                }
+                }],
+                // Show only every fourth label
+                ['screen and (max-width: 480px)', {
+                axisX: {
+                    labelInterpolationFnc: function skipLabels(value, index, labels) {
+                    return index % 4 === 0 ? value : null;
+                    }
+                }
+                }]
+            ];
+
+            // Pie Chart initialization settings - Chartist.js
+            var data02 = {
+                labels: ['Kitchen', 'Dining room', 'Living room', 'Bedroom', 'Bathroom'],
+                series: [28, 12, 20, 9, 31]
+            };
+
+            var options02 = {
+                chartPadding: 50,
+                donut: true,
+                donutWidth: 12,
+                labelOffset: 20,
+                labelDirection: 'explode',
+                labelInterpolationFnc: function(value, idx) {
+                return data02.series[idx] + '%'
+                }
+            };
+
+            var responsive_steps02 = [
+                ['screen and (max-width: 768px)', {
+                height: 240,
+                chartPadding: 25
+                }]
+            ];
+
+            // Initialize a Bar chart in the container with the ID chart01
+            new Chartist.Bar('#chart01', data01, options01, responsive_steps01)
+                .on('draw', function(data001) {
+                if (data001.type === 'bar') {
+                    data001.element.attr({
+                    style: 'stroke-width: 6px;'
+                    });
+                }
+                });
+
+            // Initialize a Pie chart in the container with the ID chart02
+            new Chartist.Pie('#chart02', data02, options02, responsive_steps02);
+
+		});
+
+		// Apply necessary changes, functionality when content is loaded
+		$(window).on('load', function() {
+
+			// This script is necessary for cross browsers icon sprite support (IE9+, ...) 
+			svg4everybody();
+
+			// "Timeout" function is not neccessary - important is to hide the preloader overlay
+			setTimeout(function() {
+
+				// Hide preloader overlay when content is loaded
+				$('#iot-preloader,.card-preloader').fadeOut();
+				$("#wrapper").removeClass("hidden");
+
+				// Check for Main contents scrollbar visibility and set right position for FAB button
+				iot.positionFab();
+
+			}, 800);
+
+		});
+
+		// Apply necessary changes if window resized
+		$(window).on('resize', function() {
+
+			// Modal reposition when the window is resized
+			$('.modal.centered:visible').each(iot.centerModal);
+
+			// Check for Main contents scrollbar visibility and set right position for FAB button
+			iot.positionFab();
+		});
+
+	</script>
+    #}
+	
+{% endblock %}

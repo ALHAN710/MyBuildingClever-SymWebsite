@@ -1,0 +1,397 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Devices Dashboard{% endblock %}
+{% block stylesheet %}
+    <link href="/css/icons.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" type="text/css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/css/font-awesome5-12-1_all.min.css">
+    
+    <!-- Google Fonts Roboto -->
+    <!-- App css -->
+    {#
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/icons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/metismenu.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />#}
+    {#
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+    #}
+    <script>
+        var $urlupdateDashMeter = "{{ path('update_mods_graphs') }}";
+        //console.log($urlupdateDashSite);
+   
+        //console.log(nbColGrid);
+    </script>
+        
+{% endblock %}
+
+{% block body %}
+    {% if devicesNb.NbEnergySmartMeter > 0 %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="float-md-right align-item-center ">
+                
+                <div class="form-group ">
+                    <label for="example-input2-group1">Pick Date(MM/YYYY)</label>
+                    <div class='input-group date' id='datetimepicker10'>
+                        <input type='text' class="form-control" id="example-input2-group1"/>
+                        {#<span class="input-group-append input-group-addon">
+                            <span class="input-group-text far fa-calendar-alt"></span>
+                        </span>#}
+                        <span class="input-group-append input-group-addon">
+                            <span class="input-group-text "><i class="far fa-calendar-alt"></i></span>
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="mt-0 header-title"></h4>
+                    
+                    <!-- Nav tabs -->
+                    {% set is_energyMeter = true %}
+                    <ul class="nav nav-tabs nav-fill" role="tablist">
+                        {% if devicesNb.NbEnergySmartMeter > 0 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" id="energysmartmeter-tab" data-toggle="tab" href="#smartMeterPane" role="tab" aria-controls="smartMeterPane" aria-selected="true">Energy Meter</a>
+                        </li>
+                        {% else %}
+                            {% set is_energyMeter = false %}
+                        {% endif %}
+                        {#{% if modFuel|length > 0 %}
+                        <li class="nav-item">
+                            <a {% if is_energyMeter == true %}class="nav-link"{% else %} class="nav-link active" {% endif %} id="fuel-tab" data-toggle="tab" href="#fuelSection" role="tab" aria-controls="fuelSection" aria-selected="true">FUEL</a>
+                        </li>   
+                        {% endif %}#}                                            
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        {% if devicesNb.NbEnergySmartMeter > 0 %}
+                        <div class="tab-pane active fade show p-3" id="smartMeterPane" role="tabpanel" aria-labelledby="energysmartmeter-tab">
+                            <div class="row mt-5">
+                                <div class="col-sm-12">
+                                    <div class="card-box table-responsive">
+                                        <table id="datatable-responsive1" class="table dt-responsive nowrap EnergySmartMeterTabReport" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th class="text-left">Name</th>
+                                                    <th>Active Energy (kWh)</th>
+                                                    {#<th>Cost(XAF)</th>#}
+                                                    {#<th>Reactive Energy(kVARh)</th>
+                                                    <th>Cosϕ</th>#}
+                                                    {%  set nbcolgrid  = 6 %}
+                                                    <script>var nbColGrid =  {{ nbcolgrid }} ;</script>
+                                                    {#{% dump(nbcolfuel) %}#}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for mod in devicesTab.EnergySmartMeter %}
+                                            <tr class="text-center">
+                                                <td class="text-left">
+                                                    {#<a href="{{ path('show_mod_graphs', {'id': mod.id}) }}">{{mod.modName}}</a>#}
+                                                    {{mod.Name}}
+                                                </td>
+                                                <td class="EA"></td>
+                                                {#<td class="Cos"></td>#}
+                                                
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {#<div class="spinGridTab d-none">
+                                        <div class="spinner-border text-pink" role="status"></div>
+                                    </div>#}
+                                    
+
+                                </div>
+                            </div>
+                            <div class="card-preloader">
+                                <div class="center-preloader d-flex align-items-center">
+                                    <div class="spinners">
+                                        <div class="spinner01"></div>
+                                        <div class="spinner02"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                            {% set is_energyMeter = false %}
+                        {% endif %}
+                                             
+                    </div>        
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-md-center mt-5">
+        <!-- EnergyMeter Modules DataTable id="spinGridDetailed" -->
+        <div class="col">
+            <div class="card">
+                <div class="card-body table-responsive">
+                    <div class="row">
+                        <div class="col-1">
+                            <i class="d-none d-sm-block mdi mdi-information-outline mdi-48px"></i>
+                        </div>
+                        <div class="col-11">
+                            <h5 class="header-title text-center mb-3">Detailed modules informations</h5>
+                            <div class="form-group row mr-4">
+                                <label class="col-sm-12 col-form-label text-sm-center">Select Meter</label>
+                                <div class="col-sm-12 text-sm-center ">
+                                    <select class="form-control" id="selectEnergySmartMeter">
+                                            {#{{dump(type)}}#}
+                                        {% for energySmartMeter in devicesTab.EnergySmartMeter %}
+                                            {#{% if energySmartMeter.modenergySmartMeter == 'GRID' %}#}
+                                            <option data-entry-idenergysmartmeter="{{energySmartMeter.id}}" id="energysmartmeter_{{energySmartMeter.id}}">{{energySmartMeter.Name}}</option>
+                                            {#{% endif %}#}
+                                        {% endfor %}
+                                        {#<option value="S0">SMARTMETER0</option>#}
+                                    </select>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <table id="datatable2" class="table dt-responsive nowrap EnergySmartMeterTab" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Energy(kWh)</td>
+                                <td></td>
+                                <td class="text-right">
+                                    <span id="EAProgVal">100</span>%<span><i class="mdi mdi-menu-down mdi-24px text-danger" id="EAProg"></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Cost(XAF)</td>
+                                <td></td>
+                                <td class="text-right">
+                                    <span id="CostProgVal">70.5</span>%<span><i class="mdi mdi-menu-down mdi-24px text-danger" id="CostProg"></i></span>
+                                </td>
+                            </tr>
+                            {#<tr>
+                                <td>Reactif (kVARh)</td>
+                                <td></td>
+                                <td class="text-right">
+                                    <span id="gridERProgVal">0</span>%<span><i class="mdi mdi-menu-down mdi-24px text-success" id="gridERProg"></i></span>
+                                </td>
+                            </tr>#}
+                            {#<tr>
+                                <td>Cosϕ</td>
+                                <td></td>
+                                <td class="text-right">
+                                    <span id="gridCosProgVal">0</span>%<span><i class="mdi mdi-menu-down mdi-24px text-danger" id="gridCosProg"></i></span>
+                                </td>
+                            </tr>#}
+                            <tr>
+                                <td>Pmax (kW)</td>
+                                <td></td>
+                                <td class="text-right">
+                                    <span id="PmaxProgVal">55.25</span>%<span><i class="mdi mdi-menu-down mdi-24px text-danger" id="PmaxProg"></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Pmoy (kW)</td>
+                                <td ></td>
+                                <td class="text-right">
+                                    <span id="PmoyProgVal">96.3</span>%<span><i class="mdi mdi-menu-down mdi-24px text-danger" id="PmoyProg"></i></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>   
+                    {#<div class="spinGridDetailed d-none">
+                        <div class="spinner-border text-pink" role="status"></div>
+                    </div>#}
+                        
+                </div>
+
+                <div id="select-preloader">
+                    <div class="card-preloader">
+                        <div class="center-preloader d-flex align-items-center">
+                            <div class="spinners">
+                                <div class="spinner01"></div>
+                                <div class="spinner02"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End SmartMeter Modules DataTable -->
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Active Energy Usage</h4>
+                </div>
+                <hr class="my-0">
+                <div class="card-body">
+                    <div class="row">
+                        <div id="chart01" class="col-sm-12 col-md-8 pb-3 ct-chart">
+                            <p class="text-center text-primary">Daily</p>
+                        </div>
+                        <div id="chart02" class="col-sm-12 col-md-4 pb-3 ct-chart">
+                            <p class="text-center text-primary mb-0">Overall</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-preloader">
+                    <div class="center-preloader d-flex align-items-center">
+                        <div class="spinners">
+                            <div class="spinner01"></div>
+                            <div class="spinner02"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    {% endif %}
+{% endblock %} 
+
+{% block javascripts %}
+    <script src="/js/moment.min.js"></script>
+    <script src="/js/bootstrap-datetimepicker.min.js"></script>
+    <!-- Chartist.js library - NO jQuery dependency -->
+    <script src="/js/chartist.min.js"></script>
+
+    <!-- Chartist.js pugin - Legend -->
+    <script src="/js/chartist-legend.min.js"></script>
+    <script src="/js/smartHome.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker10').datetimepicker({
+                viewMode: 'years',
+                format: 'MM/YYYY',
+                minDate: moment("01-2020", "MM/YYYY"),//"01-01-2020",
+                //startDate: new Date("01-01-2020 00:00:00"),
+                defaultDate: moment(),
+                
+            });
+        });
+        
+        // Bar Chart initialization settings - Chartist.js
+        var data01 = {
+            // Labels array that can contain any sort of values
+            labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            // Series array that contains series objects or in this case series data arrays
+            series: [{
+                "name": "Kitchen",
+                "data": [7, 4, 6, 5, 6, 3, 8]
+            },
+            {
+                "name": "Dining",
+                "data": [3, 1, 1, 2, 1, 2, 2]
+            },
+            {
+                "name": "Living room",
+                "data": [6, 2, 3, 4, 2, 5, 7]
+            },
+            {
+                "name": "Bedroom",
+                "data": [2, 1, 1, 1, 1, 2, 3]
+            },
+            {
+                "name": "Bathroom",
+                "data": [6, 5, 6, 7, 5, 12, 9]
+            }
+            ]
+        };
+
+        var options01 = {
+            axisY: {
+                labelInterpolationFnc: function (value) {
+                    return value + 'kWh'
+                }
+            },
+            height: 240,
+            high: 14,
+            low: 0,
+            scaleMinSpace: 6,
+            onlyInteger: false,
+            referenceValue: 0,
+            seriesBarDistance: 8,
+            plugins: [
+                Chartist.plugins.legend({
+                    position: 'bottom'
+                })
+            ]
+        };
+
+        var responsive_steps01 = [
+            // Show only every second label
+            ['screen and (max-width: 768px)', {
+                axisX: {
+                    labelInterpolationFnc: function skipLabels(value, index, labels) {
+                        return index % 2 === 0 ? value : null;
+                    }
+                }
+            }],
+            // Show only every fourth label
+            ['screen and (max-width: 480px)', {
+                axisX: {
+                    labelInterpolationFnc: function skipLabels(value, index, labels) {
+                        return index % 4 === 0 ? value : null;
+                    }
+                }
+            }]
+        ];
+
+        // Pie Chart initialization settings - Chartist.js
+        var data02 = {
+            labels: ['Kitchen', 'Dining room', 'Living room', 'Bedroom', 'Bathroom'],
+            series: [28, 12, 20, 9, 31]
+        };
+
+        var options02 = {
+            chartPadding: 50,
+            donut: true,
+            donutWidth: 12,
+            labelOffset: 20,
+            labelDirection: 'explode',
+            labelInterpolationFnc: function (value, idx) {
+                return data02.series[idx] + '%'
+            }
+        };
+
+        var responsive_steps02 = [
+            ['screen and (max-width: 768px)', {
+                height: 240,
+                chartPadding: 25
+            }]
+        ];
+
+        // Initialize a Bar chart in the container with the ID chart01
+        var energyBarChart = new Chartist.Bar('#chart01', data01, options01, responsive_steps01)
+            .on('draw', function (data001) {
+                if (data001.type === 'bar') {
+                    data001.element.attr({
+                        style: 'stroke-width: 6px;'
+                    });
+                }
+            });
+        //energyBarChart.update(data, options, override)
+        // Initialize a Pie chart in the container with the ID chart02
+        new Chartist.Pie('#chart02', data02, options02, responsive_steps02);
+
+    </script>
+    <script src="/js/updateDashMeter.js"></script>
+    
+{% endblock %}

@@ -1,0 +1,780 @@
+{%	extends 'base.html.twig' %}
+
+{% block title	%}
+	Home
+{%	endblock	%}
+
+{% block stylesheet	%}
+     
+{% endblock	%}
+
+{%	block body	%}
+	
+	<div class="row">
+		<div class="col-sm-12">
+			<div
+				class="card p-2 mb-4 text-center h3">
+				<!-- <img src="assets/images/symbiot4.svg" width="140" height="20" alt="SYMBIOT 4" class="mx-auto"> -->
+				My CleverHome
+			</div>
+		</div>
+	</div>
+    {#
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+
+                <!-- Security system START -->
+                {%	set state = security[0].activation ? 1 : 0 %}
+                <div class="card lock {% if security[0].activation == 1 %} active {% endif %}" data-unit="switch-house-lock" data-entry-securityvalue= {{ state }}>
+                    <div class="card-body d-flex flex-wrap">
+                        <svg class="icon-sprite icon-2x">
+                            <use xlink:href="/images/icons-sprite.svg#home"/>
+                            <use class="subicon-unlocked" xlink:href="/images/icons-sprite.svg#subicon-unlocked"/>
+                            <use class="subicon-locked" xlink:href="/images/icons-sprite.svg#subicon-locked"/>
+                        </svg>
+                        <div class="title-status">
+                            <h4>Security system</h4>
+                            <p class="status">
+                                <span class="arm"></span>
+                            </p>
+                        </div>
+                        <label class="switch ml-auto ">
+                            <input type="checkbox" id="switch-house-lock">
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Security system END -->
+
+            </div>
+
+        </div>
+    #}
+
+	<div class="row">
+		{% if devicesNb.NbLightInt > 0 %}		 
+            <div class="col-sm-12 col-md-6 col-xl-4">
+                <!-- Interior lights  START -->
+                <div class="card" data-unit-group="switch-lights">
+                    <div class="card-body">
+                        <h3 class="card-title">Lights - interior</h3>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for lightInt in devicesTab.LightInt %}
+                            <li class="list-group-item d-flex" data-unit="switch-light-{{lightInt.moduleId}}">
+                                <svg class="icon-sprite">
+                                    <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                    <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                                </svg>
+                                <h5>{{lightInt.name}}</h5>
+                                <div class=""><canvas id="led-{{lightInt.moduleId}}" data-entry-led="switch-light-{{lightInt.moduleId}}" data-entry-ledid="led-{{lightInt.moduleId}}" width="30" height="30"></canvas></div>
+                                <label class="switch ml-auto">
+                                    <input type="checkbox" id="switch-light-{{lightInt.moduleId}}">
+                                </label>
+                                <div class="info-holder info-rb" style="right:40px;">
+                                    <div data-toggle="popover-all" data-content="Checkbox element using localStorage to remember the last status." data-original-title="Switch ON/OFF" data-container="body" data-placement="top" data-offset="0,-6"></div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                        {#
+                            <li class="list-group-item d-flex" data-unit="switch-light-2">
+                                <svg class="icon-sprite">
+                                    <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                    <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                                </svg>
+                                <h5>Dining room</h5>
+                                <label class="switch ml-auto">
+                                    <input type="checkbox" id="switch-light-2">
+                                </label>
+                            </li>
+                            <li class="list-group-item d-flex" data-unit="switch-light-3">
+                                <svg class="icon-sprite">
+                                    <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                    <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                                </svg>
+                                <h5>Living room</h5>
+                                <label class="switch ml-auto">
+                                    <input type="checkbox" id="switch-light-3">
+                                </label>
+                            </li>
+                            <li class="list-group-item d-flex" data-unit="switch-light-4">
+                                <svg class="icon-sprite">
+                                    <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                    <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                                </svg>
+                                <h5>Bedroom</h5>
+                                <label class="switch ml-auto">
+                                    <input type="checkbox" id="switch-light-4">
+                                </label>
+                            </li>
+                            <li class="list-group-item d-flex" data-unit="switch-light-5">
+                                <svg class="icon-sprite">
+                                    <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                    <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                                </svg>
+                                <h5>Bathroom</h5>
+                                <label class="switch ml-auto">
+                                    <input type="checkbox" id="switch-light-5">
+                                </label>
+                            </li>
+                        #}
+                    </ul>
+                    {% if devicesNb.NbLightInt > 1 %}
+                        <div class="card-body">
+                            <div class="lights-controls" data-controls="switch-lights">
+                                <button data-action="all-on" type="button" class="btn btn-primary mr-2 lights-control">All
+                                    <strong>ON</strong>
+                                </button>
+                                <button data-action="all-off" type="button" class="btn btn-secondary lights-control">All
+                                    <strong>OFF</strong>
+                                </button>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <!-- Interior lights  END -->
+            </div>
+        {% endif %}
+
+        {% if devicesNb.NbLightExt > 0 %}
+            <div class="col-sm-12 col-md-6 col-xl-4">
+                <!-- Exterior lights  START -->
+                <h3 class="card-title my-3">Lights - exterior</h3>
+                {% for lightExt in devicesTab.LightExt %}
+                    <div class="card" data-unit="switch-light-{{lightExt.moduleId}}">
+                        <div class="card-body d-flex flex-row justify-content-start">
+                            <svg class="icon-sprite">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                            </svg>
+                            <h5>{{lightExt.name}}</h5>
+                            <div class=""><canvas id="led-{{lightExt.moduleId}}" data-entry-led="switch-light-{{lightExt.moduleId}}" data-entry-ledid="led-{{lightExt.moduleId}}" width="30" height="30"></canvas></div>
+                            <label class="switch ml-auto">
+                                <input type="checkbox" id="switch-light-{{lightExt.moduleId}}">
+                            </label>
+                        </div>
+                    </div>
+                {% endfor %}
+                {#
+                    <div class="card" data-unit="switch-light-7">
+                        <div class="card-body d-flex">
+                            <svg class="icon-sprite">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                            </svg>
+                            <h5>Back doors</h5>
+                            <label class="switch ml-auto">
+                                <input type="checkbox" id="switch-light-7">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card" data-unit="switch-light-8">
+                        <div class="card-body d-flex">
+                            <svg class="icon-sprite">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                            </svg>
+                            <h5>Pool</h5>
+                            <label class="switch ml-auto">
+                                <input type="checkbox" id="switch-light-8">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card" data-unit="switch-light-9">
+                        <div class="card-body d-flex">
+                            <svg class="icon-sprite">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#bulb-eco"/>
+                            </svg>
+                            <h5>Garage</h5>
+                            <label class="switch ml-auto">
+                                <input type="checkbox" id="switch-light-9">
+                            </label>
+                        </div>
+                    </div>
+                #}
+                <!-- Exterior lights  END -->
+            </div>
+        {% endif %}
+		
+        {% if devicesNb.NbWashMachine > 0 or devicesNb.NbFridge > 0 or devicesNb.NbTv > 0  %}
+            <div class="col-sm-12 col-md-6 col-xl-4">
+                <!-- Appliances  START -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Appliances</h3>
+                    </div>
+                    {% if devicesNb.NbWashMachine > 0 %}
+                        {% for washmachine in devicesTab.WashMachine %}
+                            <hr class="my-0">
+                            <!-- Washing machine  START -->
+                            <ul class="list-group borderless active" data-unit="wash-machine">
+                                <li class="list-group-item d-flex pb-0">
+                                    <svg class="icon-sprite icon-1x">
+                                        <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                        <use xlink:href="/images/icons-sprite.svg#wash-machine"/>
+                                    </svg>
+                                    <h5>{{washmachine.name}}</h5>
+                                    <p class="ml-auto status">ON</p>
+                                </li>
+                                <li class="list-group-item d-flex pt-0 pb-4">
+                                    <p class="entry">Remaining time</p>
+                                    <p id="wash-machine" class="ml-auto mb-0"></p>
+                                </li>
+                            </ul>
+                            <!-- Washing machine  END -->
+                        {% endfor %}
+                    {% endif %}
+                    <hr class="my-0">
+                    <!-- Fridge  START -->
+                    <ul class="list-group borderless active" data-unit="home-fridge">
+                        <li class="list-group-item d-flex pb-0">
+                            <svg class="icon-sprite icon-1x">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#home-fridge"/>
+                            </svg>
+                            <h5>Fridge</h5>
+                            <p class="ml-auto status">ON</p>
+                        </li>
+                        <li class="list-group-item d-flex pt-0 pb-4">
+                            <p class="entry">Temperature</p>
+                            <p class="ml-auto mb-0">35<sup>°F</sup></p>
+                        </li>
+                    </ul>
+                    <!-- Fridge  END -->
+                    <hr class="my-0">
+                    <!-- TV  START -->
+                    <ul class="list-group borderless" data-unit="tv-lcd">
+                        <li class="list-group-item d-flex">
+                            <svg class="icon-sprite icon-1x">
+                                <use class="glow" fill="url(#radial-glow)" xlink:href="/images/icons-sprite.svg#glow"/>
+                                <use xlink:href="/images/icons-sprite.svg#tv-lcd"/>
+                            </svg>
+                            <h5>TV</h5>
+                            <p class="ml-auto status">OFF</p>
+                        </li>
+                    </ul>
+                    <!-- TV  END -->
+                </div>
+                <!-- Appliances  END -->
+            </div>
+        {% endif %}
+
+	</div>
+	
+	{#
+        <!-- Demonstration - buttons -->
+        <!--		
+        <br><br>
+        <div class="row">
+            <div class="col-sm-12">
+
+                <button type="button" class="btn btn-primary my-2">PRIMARY</button>
+                <button type="button" class="btn btn-secondary my-2">SECONDARY</button>
+                <button type="button" class="btn btn-lg btn-danger mx-2 my-2" data-toggle="modal" data-target="#alarmModal">
+                    Demo ALARM
+                </button>
+                <button type="button" class="btn btn-warning my-2">WARNING</button>
+                <button type="button" class="btn btn-success my-2">SUCCESS</button>
+                <button type="button" class="btn btn-info my-2">INFO</button>
+            </div>
+        </div>
+        -->
+    #}
+{% endblock %}
+
+{% block javascripts %}
+    
+    <script src="/js/smartHome.js"></script>
+    {#<script>
+        //console.log('The hostname is : ' + window.location.hostname);
+    </script>#}
+    {#
+    <script>
+		$(document).ready(function() {
+            var canvas = [];
+            var context = [];
+            var wsUrl = 'ws://' + '{{ ws_url }}';
+            console.log(wsUrl);
+            var mess = {
+                From: "user",
+                To: "light",
+                Object: "Toggle",
+                message: "on"
+            }; 
+            // Select elements by their data attribute
+            const $entryLedElements = $('[data-entry-led]');
+            // Map over each element and extract the data value
+            const $entryLeds =
+                $.map($entryLedElements, item => $(item).data('entryLed'));
+            // You'll now have array containing string values
+            //console.log($entryleds); // eg: ["1", "2", "3"]
+
+            // Select elements by their data attribute
+            const $entryLedIdElements = $('[data-entry-ledid]');
+            // Map over each element and extract the data value
+            const $entryLedIds =
+                $.map($entryLedIdElements, item => $(item).data('entryLedid'));
+            // You'll now have array containing string values
+            //console.log($entryEmergencyValues); // eg: ["1", "2", "3"]
+
+            function wsMessageProcessing(jsonMessage){
+                var To = jsonMessage.To;
+                var From = jsonMessage.From;
+                var mess = jsonMessage.message;
+                var object = jsonMessage.Object;
+                var role = jsonMessage.role;
+            }
+            init();
+                    
+            // This is called when the page finishes loading
+            function init() {
+
+                // Assign page elements to variables
+                /*canvas = document.getElementById("led");
+
+                // Draw circle in canvas
+                context = canvas.getContext("2d");
+                context.arc(15, 15, 5, 0, Math.PI * 2, false);
+                context.lineWidth = 3;
+                context.strokeStyle = "red";
+                context.stroke();
+                context.fillStyle = "red";
+                context.fill();*/
+
+                var led = "";
+                var ledId = "";
+                $.each($entryLeds, function (index, value) {
+                    led = "" + value;
+                    ledId = "" + $entryLedIds[index];
+                    // Assign page elements to variables
+                    canvas[led] = document.getElementById(ledId);
+
+                    // Draw circle in canvas
+                    context[led] = canvas[led].getContext("2d");
+                    context[led].arc(15, 15, 5, 0, Math.PI * 2, false);
+                    context[led].lineWidth = 3;
+                    context[led].strokeStyle = "red";
+                    context[led].stroke();
+                    context[led].fillStyle = "red";
+                    context[led].fill();
+                });
+
+                // Connect to WebSocket server
+                wsConnect(wsUrl);
+            }
+
+            // Call this to connect to the WebSocket server
+            function wsConnect(wsUrl) {
+
+                // Connect to WebSocket server
+                websocket = new WebSocket(wsUrl);
+
+                // Assign callbacks
+                websocket.onopen = function (evt) { onOpen(evt) };
+                websocket.onclose = function (evt) { onClose(evt) };
+                websocket.onmessage = function (evt) { onMessage(evt) };
+                websocket.onerror = function (evt) { onError(evt) };
+            }
+
+            // Called when a WebSocket connection is established with the server
+            function onOpen(evt) {
+
+                /*context.strokeStyle = "green";
+                context.stroke();
+                context.fillStyle = "green";
+                context.fill();*/
+                // Log connection state
+                console.log("Connected");
+                //mess.From = "user";
+                mess.To = "Box";
+                mess.Object = "Connected clients";
+                doSend(JSON.stringify(mess));
+                mess.Object = "Device Output Status";
+                mess.To = "Devices";
+                doSend(JSON.stringify(mess)); 
+            }
+
+            // Called when the WebSocket connection is closed
+            function onClose(evt) {
+                /*context.strokeStyle = "red";
+                context.stroke();
+                context.fillStyle = "red";
+                context.fill();*/
+                // Log disconnection state
+                console.log("Disconnected");
+
+                // Try to reconnect after a few seconds
+                setTimeout(function () { wsConnect(wsUrl) }, 2000);
+            }
+
+            // Called when a message is received from the server
+            function onMessage(evt) {
+
+                // Print out our received message
+                //console.log("type of evt.data: " + typeof evt.data);
+                console.log("Received: " + evt.data);
+                var str = String(evt.data);
+                //console.log("str: " + str);
+                var json= JSON.parse(evt.data);
+                //console.log("json : " + json);
+                //$("#" + json.To).prop('checked', parseInt(json.message));
+                //$("#" + key).closest("label").addClass("checked");
+                console.log(parseInt(json.message));
+                var status;
+
+                switch (json.To) {
+                    case "user":
+                        if(json.Object === "Device Output Status"){
+                            status = (parseInt(json.message) === 1) ? true : false;
+                            
+                            //$('#' + json.To).closest("label").toggleClass("checked", status);
+                            
+                            $("#" + json.From).prop('checked', status);
+                            if(status){
+                                $('[data-unit="' + json.From + '"]').toggleClass("active");
+                                $("#" + json.From).closest("label").addClass("checked");
+                            }
+                            else{
+                                $('[data-unit="' + json.From + '"]').removeClass("active");
+                                $("#" + json.From).closest("label").removeClass("checked");
+                            }
+                        }
+                        else if(json.Object === "Connected Clients"){
+                            arr = $.parseJSON(json.message); //convert to javascript array
+                            $.each(arr,function(key,value){
+                                //alert(value);
+                                context[value].strokeStyle = "green";
+                                context[value].stroke();
+                                context[value].fillStyle = "green";
+                                context[value].fill();
+                            });
+                            mess.Object = "Device Output Status";
+                            mess.To = "Devices";
+                            doSend(JSON.stringify(mess));
+                        }
+                        else if(json.Object === "Disconnected Client"){
+                            var led = json.message;
+                            context[led].strokeStyle = "red";
+                            context[led].stroke();
+                            context[led].fillStyle = "red";
+                            context[led].fill();
+                        }
+                        break;
+                    case "S0=HIGH":
+                        console.log("LED is on");
+                        setBouton('ECL1', 1);
+                        break;
+                    case "2":
+                        console.log("case : 2");
+                    default:
+                        break;
+                }
+            }
+
+            // Called when a WebSocket error occurs
+            function onError(evt) {
+                console.log("ERROR: " + evt.data);
+            }
+
+            // Sends a message to the server (and prints it to the console)
+            function doSend(message) {
+                console.log("Sending: " + message);
+                websocket.send(message);
+            }
+
+            // Called whenever the HTML button is pressed
+            function onPress() {
+                doSend("toggleLED");
+                doSend("getLEDState");
+                //doSend("getMeasurements");
+            }
+
+			// Get checkbox statuses from localStorage if available (IE)
+			if (localStorage) {
+
+				// Menu minifier status (Contract/expand side menu on large screens)
+				var checkboxValue = localStorage.getItem('minifier');
+
+				if (checkboxValue === 'true') {
+					$('#sidebar,#menu-minifier').addClass('mini');
+					$('#minifier').prop('checked', true);
+
+				} else {
+
+					if ($('#minifier').is(':checked')) {
+						$('#sidebar,#menu-minifier').addClass('mini');
+						$('#minifier').prop('checked', true);
+					} else {
+						$('#sidebar,#menu-minifier').removeClass('mini');
+						$('#minifier').prop('checked', false);
+					}
+				}
+
+				// Switch statuses
+				//var switchValues = JSON.parse(localStorage.getItem('switchValues')) || {};
+
+				/*$.each(switchValues, function(key, value) {
+
+					// Apply only if element is included on the page
+					if ($('[data-unit="' + key + '"]').length) {
+
+						if (value === true) {
+
+							// Apply appearance of the "unit" and checkbox element
+							$('[data-unit="' + key + '"]').addClass("active");
+							$("#" + key).prop('checked', true);
+							$("#" + key).closest("label").addClass("checked");
+
+							//In case of Camera unit - play video
+							if (key === "switch-camera-1" || key === "switch-camera-2") {
+								$('[data-unit="' + key + '"] video')[0].play();
+							}
+
+						} else {
+							$('[data-unit="' + key + '"]').removeClass("active");
+							$("#" + key).prop('checked', false);
+							$("#" + key).closest("label").removeClass("checked");
+							if (key === "switch-camera-1" || key === "switch-camera-2") {
+								$('[data-unit="' + key + '"] video')[0].pause();
+							}
+						}
+					}
+				});*/
+			}
+
+
+			// Contract/expand side menu on click. (only large screens)
+			$('#minifier').click(function() {
+
+				$('#sidebar,#menu-minifier').toggleClass('mini');
+
+				// Save side menu status to localStorage if available (IE)
+				if (localStorage) {
+					checkboxValue = this.checked;
+					localStorage.setItem('minifier', checkboxValue);
+				}
+
+			});
+
+
+			// Side menu toogler for medium and small screens
+			$('[data-toggle="offcanvas"]').click(function() {
+				$('.row-offcanvas').toggleClass('active');
+			});
+
+
+			// Switch (checkbox element) toogler
+			$('.switch input[type="checkbox"]').on("change", function(t) {
+
+				// Check the time between changes to prevert Android native browser execute twice
+				// If you dont need support for Android native browser - just call "switchSingle" function
+				if (this.last) {
+
+					this.diff = t.timeStamp - this.last;
+
+					// Don't execute if the time between changes is too short (less than 250ms) - Android native browser "twice bug"
+					// The real time between two human taps/clicks is usually much more than 250ms"
+					if (this.diff > 250) {
+
+						this.last = t.timeStamp;
+                        mess.To = this.id;
+                        mess.message =  (this.checked ? 1 : 0);
+                        
+                        //message.To = "moi";
+                        doSend(JSON.stringify(mess));
+                        this.checked = !this.checked;
+                        //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                        //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                        console.log('id = ' + this.id);
+                        console.log('checked = ' + this.checked);
+						//iot.switchSingle(this.id, this.checked);
+
+					} else {
+						return false;
+					}
+
+				} else {
+
+					// First attempt on this switch element
+					this.last = t.timeStamp;
+                    mess.To = this.id;
+                    mess.message = (this.checked ? 1 : 0);
+                    
+                    doSend(JSON.stringify(mess));
+                    this.checked = !this.checked;
+                    //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                    //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                    console.log('id = ' + this.id);
+                    console.log('checked = ' + this.checked);
+                    //iot.switchSingle(this.id, this.checked);
+
+				}
+			});
+
+			// All ON/OFF controls
+			$('.lights-control').click(function() {
+
+				var target = $(this).closest('.lights-controls').data('controls');
+				var action = $(this).data('action');
+                console.log('target = ' + target);
+                console.log('action = ' + action);
+				//iot.switchGroup(target, action);
+                var el = '[data-unit-group="' + target + '"]';
+                var key;
+                var id;
+                var status;
+                // Apply changes based on action
+                switch (action) {
+
+                    case 'all-on':
+                        $(el + ' [data-unit]').each(function () {
+                            //console.log(this);
+                            key = $(this).data('unit');
+                            id = "#" + key;
+                            //$(this).addClass("active");
+                            //$("#" + key).prop('checked', true);
+                            //$("#" + key).closest("label").addClass("checked");
+
+                            status = $(id).is(':checked');
+                            if(!status){
+                                mess.To = key;
+                                mess.message = 1;
+                                
+                                //message.To = "moi";
+                                doSend(JSON.stringify(mess));
+                                //$(id).prop('checked', !status);
+                                //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                                //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                                console.log('id = ' + key);
+                                console.log('checked = ' + status);
+                                //switchValues[key] = true;
+                            }   
+
+                        });
+                    break;
+                    case 'all-off':
+                        $(el + ' [data-unit]').each(function () {
+                            key = $(this).data('unit');
+                            id = "#" + key;
+                            //$(this).addClass("active");
+                            //$("#" + key).prop('checked', true);
+                            //$("#" + key).closest("label").addClass("checked");
+
+                            status = $(id).is(':checked');
+                            if(status){
+                                mess.To = key;
+                                mess.message = 0;
+                                
+                                //message.To = "moi";
+                                doSend(JSON.stringify(mess));
+                                //$(id).prop('checked', !status);
+                                //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                                //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                                console.log('id = ' + key);
+                                console.log('checked = ' + status);
+                                //switchValues[key] = true;
+                            }
+                        });
+                    break;
+                }
+
+			});
+
+			// Reposition to center when a modal is shown
+			$('.modal.centered').on('show.bs.modal', iot.centerModal);
+
+			// Reset/Stop countdown timer (EXIT NOW)
+			$('#armModal').on('hide.bs.modal', iot.clearCountdown);
+
+			// Garage doors controls
+			$('.doors-control').click(function() {
+
+				var target = $(this).closest('.timer-controls').data('controls');
+				var action = $(this).data('action');
+
+				iot.garageDoors(target, action);
+			});
+
+			// Alerts "Close" callback - hide modal and alert indicator dot when user closes all alerts
+			$('#alertsModal .alert').on('close.bs.alert', function() {
+				var sum = $('#alerts-toggler').attr('data-alerts');
+				sum = sum - 1;
+				$('#alerts-toggler').attr('data-alerts', sum);
+
+				if (sum === 0) {
+					$('#alertsModal').modal('hide');
+					$('#alerts-toggler').attr('data-toggle', 'none');
+
+				}
+
+			});
+
+			// Show/hide tips (popovers) - FAB button (right bottom on large screens)
+			$('#info-toggler').click(function() {
+
+				if ($('body').hasClass('info-active')) {
+					$('[data-toggle="popover-all"]').popover('hide');
+					$('body').removeClass('info-active');
+				} else {
+					$('[data-toggle="popover-all"]').popover('show');
+					$('body').addClass('info-active');
+				}
+			});
+
+			// Hide tips (popovers) by clicking outside
+			$('body').on('click', function(pop) {
+
+				if (pop.target.id !== 'info-toggler' && $('body').hasClass('info-active')) {
+					$('[data-toggle="popover-all"]').popover('hide');
+					$('body').removeClass('info-active');
+				}
+
+			});
+
+		});
+
+		// Apply necessary changes, functionality when content is loaded
+		$(window).on('load', function() {
+
+			// This script is necessary for cross browsers icon sprite support (IE9+, ...) 
+			svg4everybody();
+
+			// Washing machine - demonstration of running program/cycle
+			$('#wash-machine').timer({
+				countdown: true,
+				format: '%H:%M:%S',
+				duration: '1h17m10s',
+				callback: function() {
+					$('[data-unit="wash-machine"]').removeClass("active");
+				}
+			});
+
+			// "Timeout" function is not neccessary - important is to hide the preloader overlay
+			setTimeout(function() {
+
+				// Hide preloader overlay when content is loaded
+				$('#iot-preloader,.card-preloader').fadeOut();
+				$("#wrapper").removeClass("hidden");
+
+				// Check for Main contents scrollbar visibility and set right position for FAB button
+				iot.positionFab();
+
+			}, 800);
+
+		});
+
+		// Apply necessary changes if window resized
+		$(window).on('resize', function() {
+
+			// Modal reposition when the window is resized
+			$('.modal.centered:visible').each(iot.centerModal);
+
+			// Check for Main contents scrollbar visibility and set right position for FAB button
+			iot.positionFab();
+		});
+
+	</script>
+    #}
+	
+{% endblock %}
