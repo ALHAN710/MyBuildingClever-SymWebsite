@@ -108,6 +108,15 @@
     "fzaninotto/faker": {
         "version": "v1.9.2"
     },
+    "gos/pubsub-router-bundle": {
+        "version": "v2.3.0"
+    },
+    "gos/web-socket-bundle": {
+        "version": "v3.6.0"
+    },
+    "gos/websocket-client": {
+        "version": "v1.3.0"
+    },
     "guzzlehttp/psr7": {
         "version": "1.7.0"
     },
