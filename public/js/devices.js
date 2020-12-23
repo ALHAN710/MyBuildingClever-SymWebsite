@@ -98,8 +98,8 @@ else {
                     .find('option')
                     .remove()
                     .end()
-                    .append('<option selected="selected" value="Interior">INTERIOR</option>')
-                    .append('<option value="Exterior">EXTERIOR</option>')
+                    .append('<option selected="selected" value="Interior">INTÉRIEUR</option>')
+                    .append('<option value="Exterior">EXTÉRIEUR</option>')
                     ;
 
             }
@@ -110,8 +110,8 @@ else {
                     .remove()
                     .end()
                     .append('<option selected="selected" value="Tv">TV</option>')
-                    .append('<option  value="Wash Machine">WASH MACHINE</option>')
-                    .append('<option  value="Fridge">FRIDGE</option>')
+                    .append('<option  value="Wash Machine">MACHINE À LAVER</option>')
+                    .append('<option  value="Fridge">RÉFRIGÉRATEUR</option>')
                     ;
 
             }
@@ -121,8 +121,8 @@ else {
                     .find('option')
                     .remove()
                     .end()
-                    .append('<option selected="selected" value="Clim">CLIM</option>')
-                    .append('<option  value="Fan">FAN</option>')
+                    .append('<option selected="selected" value="Clim">CLIMATISEUR</option>')
+                    .append('<option  value="Fan">VENTILATEUR</option>')
                     ;
 
             }
@@ -185,9 +185,9 @@ else {
                 .remove()
                 .end()
                 .append('<option selected="selected" value="Intrusion">INTRUSION</option>')
-                .append('<option value="Fire">FIRE</option>')
-                .append('<option value="Flood">FLOOD</option>')
-                .append('<option value="Opening">OPENING</option>')
+                .append('<option value="Fire">INCENDIE</option>')
+                .append('<option value="Flood">INONDATION</option>')
+                .append('<option value="Opening">OUVERTURE</option>')
                 ;
 
             _appliancespec.removeClass("d-none");
@@ -305,8 +305,8 @@ $('#devices_type').change(function () {
                         .find('option')
                         .remove()
                         .end()
-                        .append('<option selected="selected" value="Interior">INTERIOR</option>')
-                        .append('<option value="Exterior">EXTERIOR</option>')
+                        .append('<option selected="selected" value="Interior">INTÉRIEUR</option>')
+                        .append('<option value="Exterior">EXTÉRIEUR</option>')
                         ;
 
                 }
@@ -317,8 +317,8 @@ $('#devices_type').change(function () {
                         .remove()
                         .end()
                         .append('<option selected="selected" value="Tv">TV</option>')
-                        .append('<option  value="Wash Machine">WASH MACHINE</option>')
-                        .append('<option  value="Fridge">FRIDGE</option>')
+                        .append('<option  value="Wash Machine">MACHINE À LAVER</option>')
+                        .append('<option  value="Fridge">RÉFRIGÉRATEUR</option>')
                         ;
 
                 }
@@ -328,8 +328,8 @@ $('#devices_type').change(function () {
                         .find('option')
                         .remove()
                         .end()
-                        .append('<option selected="selected" value="Clim">CLIM</option>')
-                        .append('<option  value="Fan">FAN</option>')
+                        .append('<option selected="selected" value="Clim">CLIMATISEUR</option>')
+                        .append('<option  value="Fan">VENTILATEUR</option>')
                         ;
 
                 }
@@ -390,9 +390,9 @@ $('#devices_type').change(function () {
                     .remove()
                     .end()
                     .append('<option selected="selected" value="Intrusion">INTRUSION</option>')
-                    .append('<option value="Fire">FIRE</option>')
-                    .append('<option value="Flood">FLOOD</option>')
-                    .append('<option value="Opening">OPENING</option>')
+                    .append('<option value="Fire">INCENDIE</option>')
+                    .append('<option value="Flood">INONDATION</option>')
+                    .append('<option value="Opening">OUVERTURE</option>')
                     ;
 
 

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User Inscription{% endblock %}
+{% block title %}Création Utilisateur{% endblock %}
 
 {% block header %}{% endblock %}
 
@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-12 col-sm-10 offset-sm-1">
         
-            <h1 class="mb-5">Creating New User</h1>
+            <h1 class="mb-5">Création Utilisateur</h1>
 
             {{ form_start(form) }}
 
@@ -66,12 +66,12 @@
                 {{ form_widget(form.role, {'attr': {'class': "form-control custom-focus"}}) }}
                 </div>
             </div>
-            <div class="form-group row">
+            {# <div class="form-group row">
                 {{ form_label(form.avatar, null, {'label_attr': {'class': 'col-12 col-sm-3 col-form-label'}}) }}
                 <div class="col-12 col-sm-9">
                 {{ form_widget(form.avatar, {'attr': {'class': "form-control custom-focus"}}) }}
                 </div>
-            </div>
+            </div> #}
 
             <button type="submit" class="btn btn-primary mt-5">Save</button>
 
@@ -81,4 +81,8 @@
     
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+	<script src="/js/smartHome.js"></script>
 {% endblock %}

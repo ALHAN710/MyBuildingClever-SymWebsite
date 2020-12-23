@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Settings{% endblock %}
+{% block title %}Paramètres{% endblock %}
 
 {% block stylesheet %}
-  <link rel="stylesheet" href="/css/bootstrap4.min.css">
+  {# <link rel="stylesheet" href="/css/bootstrap4.min.css"> #}
 {% endblock %}
 
 {% block body %}
@@ -13,11 +13,11 @@
       <!-- Settings tabs START -->
       <ul class="nav nav-tabs nav-fill" role="tablist">
         <li class="nav-item">
-          <a class="nav-link {% if tabpanel == 0 %}active{% endif %}" data-toggle="tab" href="#userconfig" role="tab">User Configurations</a>
+          <a class="nav-link {% if tabpanel == 0 %}active{% endif %}" data-toggle="tab" href="#userconfig" role="tab">Config Utilisateur</a>
         </li>
         {% if is_granted('ROLE_SUPER_ADMIN') == true %}
         <li class="nav-item">
-          <a class="nav-link {% if tabpanel != 0 %}active{% endif %}" data-toggle="tab" href="#devicesconfig" role="tab">Devices Configurations</a>
+          <a class="nav-link {% if tabpanel != 0 %}active{% endif %}" data-toggle="tab" href="#devicesconfig" role="tab">Config Équipement</a>
         </li>
         {% endif %}
         <!--
@@ -111,7 +111,7 @@
                       <td> {{ _user.email }} </td>
                       <td> {{ _user.fullPhone }} </td>
                       <td class="text-center">
-                          <a href="{{ path('account_profile', {'id': _user.id}) }}" class="btn btn-primary btn-xs rounded" data-toggle="tooltip" data-placement="top" title="Edit {{ _user.firstName }} profile"><i class="fa fa-edit "></i></a>
+                          <a href="{{ path('account_profile', {'id': _user.id}) }}" class="btn btn-primary btn-xs rounded mr-2" data-toggle="tooltip" data-placement="top" title="Edit {{ _user.firstName }} profile"><i class="fa fa-edit "></i></a>
                           <a href="{{ path('admin_user_delete', {'id': _user.id}) }}" class="btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" title="Delete {{ _user.firstName }}"><i class="fa fa-trash "></i></a>
 
                       </td>
@@ -131,7 +131,7 @@
           
             </table>
           </div>
-          <a href="{{ path('admin_user_create') }}" class="btn btn-primary btn-xs rounded mt-4" data-toggle="tooltip" data-placement="top" title="Add New User"><i class="fa fa-plus-circle mr-1"></i>Add User</a>
+          <a href="{{ path('admin_user_create') }}" class="btn btn-primary btn-xs rounded mt-4" data-toggle="tooltip" data-placement="top" title="Add New User"><i class="fa fa-plus-circle mr-1"></i>Utilisateur</a>
               
         </div>
         <!-- User Config pane END -->
@@ -229,7 +229,7 @@
             
             </table>
           </div>
-          <a href="{{ path('super_admin_devices_create') }}" class="btn btn-primary btn-xs rounded mt-4" data-toggle="tooltip" data-placement="top" title="Add New Device"><i class="fa fa-plus-circle mr-1"></i>Add Devices</a>
+          <a href="{{ path('super_admin_devices_create') }}" class="btn btn-primary btn-xs rounded mt-4" data-toggle="tooltip" data-placement="top" title="Add New Device"><i class="fa fa-plus-circle mr-1"></i>Équipement</a>
           
         </div>
         <!-- Devices Config pane END -->

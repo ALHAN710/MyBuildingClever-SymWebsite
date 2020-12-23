@@ -1,21 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Device modification{% endblock %}
+{% block title %}Modification Équipement{% endblock %}
 
 
 {% block body %}
 
-  <h1>Modification of Device : {{ device.name }}</h1>
+  <h1>Modification de l'équipement : {{ device.name }}</h1>
 
   <div class="row">
     <div class="col-12 col-sm-10 offset-sm-1">
       <!-- Device tabs START -->
       <ul class="nav nav-tabs nav-fill" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#editDevice" role="tab">DEVICE Config</a>
+          <a class="nav-link active" data-toggle="tab" href="#editDevice" role="tab">Config Équipement</a>
         </li>
         <li class="nav-item {% if device.type != 'Camera' %}d-none{% endif %}" id="cameraUrlTab">
-          <a class="nav-link" data-toggle="tab" href="#streamingUrlPane" role="tab">Camera URL Seeker</a>
+          <a class="nav-link" data-toggle="tab" href="#streamingUrlPane" role="tab">Visualisation URL</a>
         </li>
       </ul>
       <div class="info-holder info-ct">

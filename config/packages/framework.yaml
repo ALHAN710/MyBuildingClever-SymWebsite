@@ -13,7 +13,7 @@ framework:
         handler_id: session.handler.native_file
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         # 2 Days lifetime (172800 seconds)
-        cookie_lifetime: 1200   # 20 minutes
+        cookie_lifetime: 172800 #1200   # 20 minutes
         cookie_secure: 'auto'
         cookie_samesite: 'lax'
 

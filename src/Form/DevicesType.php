@@ -18,7 +18,7 @@ class DevicesType extends ApplicationType
             ->add(
                 'name',
                 TextType::class,
-                $this->getConfiguration("Name :", "Device Name please...")
+                $this->getConfiguration("Nom (*)", "Nom de l'équipement (Obligatoire)...")
             )
 
             ->add(
@@ -27,16 +27,16 @@ class DevicesType extends ApplicationType
                 [
                     'choices' => [
                         'CAMERA'           => 'Camera',
-                        'SENSOR'           => 'Sensor',
-                        'ALARM'            => 'Alarm',
-                        'LIGHT'            => 'Light',
-                        'APPLIANCE'        => 'Appliance',
-                        'CLIMATE'          => 'Climate',
-                        'BELL'             => 'Bell',
+                        'CAPTEUR'          => 'Sensor',
+                        'ALARME'           => 'Alarm',
+                        'LUMINAIRE'        => 'Light',
+                        'APPAREIL'         => 'Appliance',
+                        'CLIMAT'           => 'Climate',
+                        'SONNERIE'         => 'Bell',
                         'SMART METER'      => 'Smart Meter',
-                        'EMERGENCY BUTTON' => 'Emergency'
+                        "BOUTON D'URGENCE" => 'Emergency'
                     ],
-                    'label'    => "Device Type"
+                    'label'    => "Type d'équipement"
                 ]
             )
 
@@ -45,12 +45,12 @@ class DevicesType extends ApplicationType
                 ChoiceType::class,
                 [
                     'choices' => [
-                        'INTRUSION'  => 'Intrusion',
-                        'FIRE'       => 'Fire',
-                        'FLOOD'      => 'Flood',
-                        'OPENING'    => 'Opening'
+                        'INTRUSION'   => 'Intrusion',
+                        'INCENDIE'    => 'Fire',
+                        'INONDATION'  => 'Flood',
+                        'OUVERTURE'   => 'Opening'
                     ],
-                    'label'    => "Alert Type"
+                    'label'    => "Type d'Alerte"
                 ]
             )
 
@@ -59,13 +59,13 @@ class DevicesType extends ApplicationType
                 ChoiceType::class,
                 [
                     'choices' => [
-                        'INTERIOR'        => 'Interior',
-                        'EXTERIOR'        => 'Exterior',
+                        'INTERIEUR'       => 'Interior',
+                        'EXTERIEUR'       => 'Exterior',
                         'TV'              => 'Tv',
-                        'FAN'             => 'Fan',
-                        'CLIM'            => 'Clim',
-                        'WASH MACHINE'    => 'Wash Machine',
-                        'FRIDGE'          => 'Fridge'
+                        'VENTILATEUR'     => 'Fan',
+                        'CLIMATISEUR'     => 'Clim',
+                        'MACHINE À LAVER' => 'Wash Machine',
+                        'RÉFRIGÉRATEUR'   => 'Fridge'
                     ],
                     'label'    => "Light Type"
                 ]
@@ -85,24 +85,24 @@ class DevicesType extends ApplicationType
             ->add(
                 'moduleId',
                 TextType::class,
-                $this->getConfiguration("Module ID :", "Unique Module ID")
+                $this->getConfiguration("ID Module (*)", "Identifiant unique du module")
             )
 
             ->add(
                 'streamingUrl',
                 TextType::class,
-                $this->getConfiguration("Stream URL :", "Camera Url streaming ...")
+                $this->getConfiguration("URL Streaming (*)", "Url du streaming de la Camera...")
             )
             ->add(
                 'Ipaddress',
                 TextType::class,
-                $this->getConfiguration("IP Address :", "Device IP in network ...")
+                $this->getConfiguration("Adresse IP (*)", "Adresse IP de l'équipement dans le réseau ...")
             )
 
             ->add(
                 'notificationMessage',
                 TextareaType::class,
-                $this->getConfiguration("Notification Message :", "Message please...")
+                $this->getConfiguration("Message (*)", "Message de Notification ...")
 
             );
 

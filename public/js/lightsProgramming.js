@@ -125,7 +125,7 @@ function SendProg(select) {
         }
         timer = String(Timer[day].value);
         if (timer === "") { timer = 0; }// \"success\":\"1\",
-        jsonProg += ',"' + day + '":{"Mod":' + Mode + ',"WF":[' + hh + ',' + mm + '],"To":[';
+        jsonProg += ',"' + (day - 1) + '":{"Mod":' + Mode + ',"WF":[' + hh + ',' + mm + '],"To":[';
 
         if (workingTo[day].value !== "") {
             hh = (workingTo[day].value[0] === '0' ? "" : workingTo[day].value[0]) + workingTo[day].value[1];

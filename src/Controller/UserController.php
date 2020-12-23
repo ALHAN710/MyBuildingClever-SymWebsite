@@ -110,7 +110,8 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/new.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'menu' => 'Settings',
         ]);
     }
 

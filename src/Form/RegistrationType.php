@@ -18,53 +18,53 @@ class RegistrationType extends ApplicationType
             ->add(
                 'firstName',
                 TextType::class,
-                $this->getConfiguration("First Name :", "Your First Name please...")
+                $this->getConfiguration("Prénom (*)", "Votre Prénom SVP (Obligatoire)...")
             )
 
             ->add(
                 'lastName',
                 TextType::class,
-                $this->getConfiguration("Last Name :", "Your Last Name please...")
+                $this->getConfiguration("Nom (*)", "Votre Nom SVP (Obligatoire)...")
             )
 
             ->add(
                 'email',
                 EmailType::class,
-                $this->getConfiguration("Email : ", "Your email address please...")
+                $this->getConfiguration("Email (*)", "Votre Adresse email (Obligatoire pour les Administrateur)...")
 
             )
 
-            ->add(
-                'avatar',
-                TextType::class,
-                $this->getConfiguration("Avatar :", "Choose your avatar", [
-                    'required' => false
-                ])
-            )
+            // ->add(
+            //     'avatar',
+            //     TextType::class,
+            //     $this->getConfiguration("Avatar :", "Choose your avatar", [
+            //         'required' => false
+            //     ])
+            // )
 
             ->add(
                 'hash',
                 PasswordType::class,
-                $this->getConfiguration("Password :", "Password")
+                $this->getConfiguration("Mot de Passe (*)", "Mot de Passe utilisateur")
             )
 
             ->add(
                 'passwordConfirm',
                 PasswordType::class,
-                $this->getConfiguration("Confirm password :", "Confirm your Password")
+                $this->getConfiguration("Confirmation Mot de Passe (*)", "Entrer à nouveau le mot de passe de l'uilisateur")
             )
 
             ->add(
                 'countryCode',
                 TextType::class,
-                $this->getConfiguration("Country code :", "Telephone code of your country")
+                $this->getConfiguration("Code Tél (*)", "Code Téléphonique du Pays (ex: +237)")
 
             )
 
             ->add(
                 'phoneNumber',
                 TextType::class,
-                $this->getConfiguration("Phone Number :", "Your Phone Number please...")
+                $this->getConfiguration("N° Tél (*)", "Numéro de Téléphone SVP (Obligatoire)...")
 
             )
 
@@ -73,10 +73,10 @@ class RegistrationType extends ApplicationType
                 ChoiceType::class,
                 [
                     'choices' => [
-                        'USER' => 'ROLE_USER',
-                        'ADMIN' => 'ROLE_ADMIN'
+                        'UTILISATEUR'    => 'ROLE_USER',
+                        'ADMINISTRATEUR' => 'ROLE_ADMIN'
                     ],
-                    'label'    => 'User Role :'
+                    'label'    => 'Attribut'
                 ]
             );
     }
