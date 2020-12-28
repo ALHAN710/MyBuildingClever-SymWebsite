@@ -135,7 +135,13 @@ function onMessage(evt) {
                         context[value].fillStyle = "green";
                         context[value].fill();
                     });
+                    //Get the device's output status
                     mess.Object = "Device Output Status";
+                    mess.To = "Devices";
+                    doSend(JSON.stringify(mess));
+
+                    //Get the ac-device's remaining time
+                    mess.Object = "Remaining Time";
                     mess.To = "Devices";
                     doSend(JSON.stringify(mess));
                 }
@@ -148,6 +154,11 @@ function onMessage(evt) {
 
                     $('[data-unit="' + json.message + '"]').removeClass("active");
                     $("#" + json.message).closest("label").removeClass("checked");
+                }
+                else if (json.Object === "Remaining Time") {//Init the remaining time countdown
+                    var TimeInMs = parseInt(json.message);
+                    var id = json.From;
+                    acTimer(id, TimeInMs);
                 }
                 break;
             default:
@@ -165,6 +176,37 @@ function onError(evt) {
 function doSend(message) {
     console.log("Sending: " + message);
     websocket.send(message);
+}
+
+//Init the countdown timer of remaining time
+function acTimer(id, ms) {
+    //var ms = 298999;
+    ms = 1000 * Math.round(ms / 1000); // round to nearest second
+    var d = new Date(ms);
+    var strTimer = d.getUTCHours() + 'h' + d.getUTCMinutes() + 'm' + d.getUTCSeconds() + 's';
+    //var strTimer = msToTime(ms);
+    console.log(strTimer);
+    $('#RT_' + id).timer('remove');
+    //$('#wash-machine').timer('pause');
+    $('#RT_' + id).timer({
+        countdown: true,
+        format: '%H:%M:%S',
+        duration: strTimer,
+        callback: function () {
+            //$('[data-unit="' + id + '"]').removeClass("active");
+        }
+    });
+
+}
+
+function msToTime(ms) {
+    var seconds = (ms / 1000);
+    var minutes = parseInt(seconds / 60, 10);
+    seconds = seconds % 60;
+    var hours = parseInt(minutes / 60, 10);
+    minutes = minutes % 60;
+
+    return hours + 'h' + minutes + 'm' + seconds + 's';
 }
 
 $(document).ready(function () {
@@ -448,12 +490,16 @@ $(window).on('load', function () {
 
     // This script is necessary for cross browsers icon sprite support (IE9+, ...) 
     svg4everybody();
-
+    var ms = 298999;
+    ms = 1000 * Math.round(ms / 1000); // round to nearest second
+    var d = new Date(ms);
+    var strTimer = d.getHours() + 'h' + d.getMinutes() + 'm' + d.getSeconds() + 's';
+    console.log(strTimer); // "4:59"
     // Washing machine - demonstration of running program/cycle
     $('#wash-machine').timer({
         countdown: true,
         format: '%H:%M:%S',
-        duration: '1h17m10s',
+        duration: strTimer,//'1h17m10s',
         callback: function () {
             $('[data-unit="wash-machine"]').removeClass("active");
         }

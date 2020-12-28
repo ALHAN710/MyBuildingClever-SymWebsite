@@ -1,7 +1,7 @@
 {%	extends 'base.html.twig' %}
 
 {% block title	%}
-	Home
+	Accueil Luminaire
 {%	endblock	%}
 
 {% block stylesheet	%}
@@ -55,18 +55,22 @@
                                 {#<p class="ml-auto mb-0 text-success">OK</p>#}
                                 <p class="ml-auto mb-0"><canvas id="led-{{lightInt.moduleId}}" data-entry-led="switch-light-{{lightInt.moduleId}}" data-entry-ledid="led-{{lightInt.moduleId}}" width="30" height="30"></canvas></p>
                             </li>
-                            <li class="list-group-item pt-0">
-                                <p class="specs">Programming</p>
-                                <p class="ml-auto mb-0"><a href="{{path("lights_programming", {"id":lightInt.id,"tabpanel":0})}}"><i class="fa fa-clock"></i></a></p>
+                            <li class="list-group-item d-flex pt-0 pb-4">
+                                <p class="specs">Remaining time</p>
+                                <p id="wash-machine" class="ml-auto mb-0"></p>
                             </li>
                             <li class="list-group-item pt-0">
+                                <p class="specs">Programmation</p>
+                                <p class="ml-auto mb-0"><a href="{{path("lights_programming", {"id":lightInt.id,"tabpanel":0})}}"><i class="fa fa-clock"></i></a></p>
+                            </li>
+                            {# <li class="list-group-item pt-0">
                                 <p class="specs">Mean Power</p>
                                 <p class="ml-auto mb-0">24W</p>
                             </li>
                             <li class="list-group-item pt-0 pb-4">
                                 <p class="specs">Voltage range</p>
                                 <p class="ml-auto mb-0">110-130V</p>
-                            </li>
+                            </li> #}
                         </ul>
                         <!-- Bulb details END -->
                         {#
@@ -289,7 +293,7 @@
         <hr class="my-2">
         <!-- Exterior lights START -->
         <div class="row" data-unit-group="switch-lights-ex">
-            {% if devicesNb.NbLightInt > 1 %}
+            {% if devicesNb.NbLightExt > 1 %}
                 <div class="col-sm-12 col-md-6 col-xl-4">
                     <!-- ON/OFF all interior lights  START -->
                     <div class="card">
@@ -330,18 +334,22 @@
                                 {#<p class="ml-auto mb-0 text-success">OK</p>#}
                                 <div class="ml-auto mb-0"><canvas id="led-{{lightExt.moduleId}}" data-entry-led="switch-light-{{lightExt.moduleId}}" data-entry-ledid="led-{{lightExt.moduleId}}" width="30" height="30"></canvas></div>
                             </li>
-                            <li class="list-group-item pt-0">
-                                <p class="specs">Programming</p>
-                                <p class="ml-auto mb-0"><a href="{{path("lights_programming", {"id":lightExt.id,"tabpanel":1})}}"><i class="fa fa-clock"></i></a></p>
+                            <li class="list-group-item d-flex pt-0 pb-4">
+                                <p class="specs">Remaining time</p>
+                                <p id="wash-machine" class="ml-auto mb-0"></p>
                             </li>
                             <li class="list-group-item pt-0">
+                                <p class="specs">Programmation</p>
+                                <p class="ml-auto mb-0"><a href="{{path("lights_programming", {"id":lightExt.id,"tabpanel":1})}}"><i class="fa fa-clock"></i></a></p>
+                            </li>
+                            {# <li class="list-group-item pt-0">
                                 <p class="specs">Mean Power</p>
                                 <p class="ml-auto mb-0">15W</p>
                             </li>
                             <li class="list-group-item pt-0 pb-4">
                                 <p class="specs">Voltage range</p>
                                 <p class="ml-auto mb-0">110-130V</p>
-                            </li>
+                            </li> #}
                         </ul>
                         <!-- Bulb details END -->
                     </div>

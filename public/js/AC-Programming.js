@@ -60,56 +60,138 @@ var autoon = [];
 var Timer = [];
 
 
-if (tabInt) RefreshProg('lightInt');
-if (tabExt) RefreshProg('lightExt');
-$('#lightInt_select').change(function () {
-    Str = String($('#lightInt_select').val());
+if (tabClim) {
+    //$('.card-preloader').fadeIn();
+
+    RefreshProg('clim');
+}
+//if (tabFan) RefreshProg('fan');
+$('#clim_select').change(function () {
+    Str = String($('#clim_select').val());
     //$('#outputname').attr('disabled', true);
 
-    Name = $('#lightInt_select option[value=\"' + Str + '\"]').text();
+    Name = $('#clim_select option[value=\"' + Str + '\"]').text();
     console.log('outselect val ' + Str);
     console.log('Option selected : ' + String(Name));
     //$("#outputname").val(String(Name));
     //console.log('OutputName : ' + $("#outputname").val());
 
-    RefreshProg('lightInt');
-
-});
-$('#lightExt_select').change(function () {
-    Str = String($('#lightExt_select').val());
-
-    Name = $('#lightExt_select option[value=\"' + Str + '\"]').text();
-    console.log('outselect val ' + Str);
-    console.log('Option selected : ' + String(Name));
-
-    RefreshProg('lightExt');
+    RefreshProg('clim');
 
 });
 
-$('#Save_LightIntProg').click(function () {
-    SendProg('lightInt');
+$('#scenario').change(function () {
+    switch (String($('#scenario').val())) {
+        case "Prog":
+            $('#timeRegFields').addClass('d-none');
+            break;
+        case "Prog&Break":
+            $('#timeRegFields').addClass('d-none');
+            break;
+        case "Break":
+            $('#timeRegFields').addClass('d-none');
+            break;
+        case "Break&Reg":
+            $('#timeRegFields').removeClass('d-none');
+            break;
+        case "Reg":
+            $('#timeRegFields').removeClass('d-none');
+            break;
+        case "Prog&Reg":
+            $('#timeRegFields').removeClass('d-none');
+            break;
+        case "All":
+            $('#timeRegFields').removeClass('d-none');
+            break;
 
+        default:
+            break;
+    }
 });
-$('#Save_LightExtProg').click(function () {
-    SendProg('lightExt');
+
+$('#Save_ACProg').click(function () {
+    SendProg('clim');
 
 });
 
 //Fonction qui va transférer les données de programmation horaire entrer par l'utilisateur
 function SendProg(select) {
+    var prog;
+    var brk;
+    var reg;
     var jsonProg = "";
     var Mode = 0;
+    var BTMode = 0;
     var hh = "";
     var mm = "";
     var autoOn = 0;
     var timer = String("");
+    timeON = document.getElementById("timeON");
+    timeOFF = document.getElementById("timeOFF");
 
-    jsonProg += '{"outName":"' + $('#' + select + '_select').val() + '"';
+
+    switch (String($('#scenario').val())) {
+        case "Prog":
+            prog = 1;
+            brk = 0;
+            reg = 0;
+            break;
+        case "Prog&Break":
+            prog = 1;
+            brk = 1;
+            reg = 0;
+            break;
+        case "Break":
+            prog = 0;
+            brk = 1;
+            reg = 0;
+            break;
+        case "Break&Reg":
+            prog = 0;
+            brk = 1;
+            reg = 1;
+            break;
+        case "Reg":
+            prog = 0;
+            brk = 0;
+            reg = 1;
+            break;
+        case "Prog&Reg":
+            prog = 1;
+            brk = 0;
+            reg = 1;
+            break;
+        case "All":
+            prog = 1;
+            brk = 1;
+            reg = 1;
+            break;
+
+        default:
+            break;
+    }
+
+    var timerON = String(timeON.value);
+    if (timerON === "") { timerON = 0; }
+    var timerOFF = String(timeOFF.value);
+    if (timerOFF === "") { timerOFF = 0; }
+
+    jsonProg += '{"outName":"' + $('#' + select + '_select').val() + "\",\"ProgF\":" + prog + ",\"BreakF\":" + brk + ",\"RegF\":" + reg + ",\"TON\":" + timerON + ",\"TOFF\":" + timerOFF;
     for (let day = 1; day < 8; day++) {
         workingFrom[day] = document.getElementById(select + '_timeweek_from' + (day - 1));
         workingTo[day] = document.getElementById(select + '_timeweek_to' + (day - 1));
         autoon[day] = $('#' + select + '_auto_on_check' + (day - 1)).is(':checked');
         Timer[day] = document.getElementById(select + '_timer' + (day - 1));
+
+        if ((day - 1) != 0 && (day - 1) != 6) {
+            breakweek_from = document.getElementById("breakweek_from1");
+            breakweek_to = document.getElementById("breakweek_to1");
+        } else {
+            breakweek_from = document.getElementById("breakweek_from" + (day - 1));
+            breakweek_to = document.getElementById("breakweek_to" + (day - 1));
+
+        }
+
         console.log('workingFrom[' + day + '].value = ' + workingFrom[day].value);
         if (workingFrom[day].value !== "" && workingFrom[day].value !== "") { Mode = 1; }
         else { Mode = 0; }
@@ -139,17 +221,40 @@ function SendProg(select) {
         }
         if (autoon[day]) { autoOn = 1; }
         else { autoOn = 0; }
-        jsonProg += hh + "," + mm + '],"Auto":' + autoOn + ',"Td":' + timer + '}';
+        //jsonProg += hh + "," + mm + '],"Auto":' + autoOn + ',"Td":' + timer + '}';
+        jsonProg += hh + "," + mm + "],\"Auto\":" + autoOn + ",\"Td\":" + timer + ", \"BF\":[";
+        BTMode = 1;
+        if (breakweek_from.value !== "") {
+            hh = breakweek_from.value[0] + breakweek_from.value[1];
+            mm = breakweek_from.value[3] + breakweek_from.value[4];
+            BTMode = 1 * BTMode;
+        }
+        else {
+            hh = -1;
+            mm = -1;
+            BTMode = 0 * BTMode;
+        }
+        jsonProg += hh + "," + mm + "],\"Bto\":[";
+        if (breakweek_to.value !== "") {
+            hh = breakweek_to.value[0] + breakweek_to.value[1];
+            mm = breakweek_to.value[3] + breakweek_to.value[4];
 
+        }
+        else {
+            hh = -1;
+            mm = -1;
 
+        }
+        jsonProg += hh + "," + mm + "],\"BTMod\":" + BTMode + "}";
     }
+
     jsonProg += '}';
-    console.log(jsonProg);
+    //console.log(jsonProg);
 
     var $data = JSON.stringify({
         "action": "save",
         "prog": jsonProg,
-        "type": "Light"
+        "type": "Climate"
     });
 
     console.log($data);
@@ -171,7 +276,7 @@ function SendProg(select) {
                     $('#' + Str + '_name').text(String(myname));
                 }*/
                 //mess.From = "user";
-                mess.To = "switch-light-" + $('#' + select + '_select').val();
+                mess.To = "AC-" + $('#' + select + '_select').val();
                 mess.Object = "Programming";
                 mess.message = jsonProg;
                 doSend(JSON.stringify(mess));
@@ -196,7 +301,7 @@ function RefreshProg(select) {
         "action": "get prog",
         "criteria": "name",
         "name": $('#' + select + '_select').val(),
-        "type": "Light",
+        "type": "Climate"
     });
 
     console.log($data);
@@ -213,6 +318,7 @@ function RefreshProg(select) {
             var h = "";
             var m = "";
             var str = "";
+            var sel = "";
 
             if (data.success === 1 || data.success === "1") {
 
@@ -221,10 +327,20 @@ function RefreshProg(select) {
                 //$('#outputname').attr('disabled', true);
                 //Name = $('#outselect option[value=\"' + Str + '\"]').text();
                 $data = JSON.parse(JSON.stringify(data.prog))
+                if ($data.ProgF && $data.BreakF && $data.RegF) sel = "All";
+                else if ($data.ProgF && !$data.BreakF && !$data.RegF) sel = "Prog";
+                else if ($data.ProgF && $data.BreakF && !$data.RegF) sel = "Prog&Break";
+                else if (!$data.ProgF && !$data.BreakF && $data.RegF) sel = "Reg";
+                else if ($data.ProgF && !$data.BreakF && $data.RegF) sel = "Prog&Reg";
+                else if (!$data.ProgF && $data.BreakF && !$data.RegF) sel = "Break";
+                //else if (!$data.ProgF && $data.BreakF && $data.RegF) sel = "Break&Reg";
+                $('#scenario option[value=\"' + sel + '\"]').attr('selected', true);
+                $('#timeON').val($data.TON);
+                $('#timeOFF').val($data.TOFF);
                 //console.log($data.parseInt("1"));
                 for (let day = 1; day < 8; day++) {
                     if ($data['' + (day - 1)].Mod === 1 || String($data['' + (day - 1)].Mod) === "1") {
-                        console.log('day-' + (day - 1) + ' Mod = 1');
+                        console.log('day-' + day + ' Mod = 1');
                         if (parseInt($data['' + (day - 1)].WF[0]) >= 0 && parseInt($data['' + (day - 1)].WF[0]) < 10) {
                             h = "0" + $data['' + (day - 1)].WF[0];
                             console.log('day-' + (day - 1) + ' WFh = ' + h);
@@ -261,6 +377,49 @@ function RefreshProg(select) {
                         str = String(h) + ":" + String(m);
                         console.log('day-' + (day - 1) + ' Time To = ' + String(str));
                         $('#' + select + '_timeweek_to' + (day - 1)).val(String(str));
+
+                        h = "";
+                        m = "";
+                        if (parseInt($data['' + (day - 1)].BF[0]) >= 0 && parseInt($data['' + (day - 1)].BF[0]) < 10) {
+                            h = "0" + $data['' + (day - 1)].BF[0];
+                            console.log('weekBFh = ' + h);
+                        }
+                        else { h = $data['' + (day - 1)].BF[0]; }
+                        if (parseInt($data['' + (day - 1)].BF[1]) >= 0 && parseInt($data['' + (day - 1)].BF[1]) < 10) {
+                            m = "0" + $data['' + (day - 1)].BF[1];
+                            console.log('weekBFm = ' + m);
+                        }
+                        else {
+                            m = "" + $data['' + (day - 1)].BF[1];
+                            console.log('weekBFm = ' + m);
+                        }
+                        str = String(h) + ":" + String(m);
+                        if ((day - 1) != 0 && (day - 1) != 6) $('#breakweek_from1').val(String(str));
+                        else if ((day - 1) == 6) $('#breakweek_from6').val(String(str));
+                        h = "";
+                        m = "";
+                        if (parseInt($data['' + (day - 1)].Bto[0]) >= 0 && parseInt($data['' + (day - 1)].Bto[0]) < 10) {
+                            h = "0" + $data['' + (day - 1)].Bto[0];
+                            console.log('weekBtoh = ' + h);
+                        }
+                        else {
+                            h = "" + $data['' + (day - 1)].Bto[0];
+                            console.log('weekBtoh = ' + h);
+                        }
+                        if (parseInt($data['' + (day - 1)].Bto[1]) >= 0 && parseInt($data['' + (day - 1)].Bto[1]) < 10) {
+                            m = "0" + $data['' + (day - 1)].Bto[1];
+                            console.log('weekBtom = ' + m);
+                        }
+                        else {
+                            m = "" + $data['' + (day - 1)].Bto[1];
+                            console.log('weekBtom = ' + m);
+                        }
+                        str = String(h) + ":" + String(m);
+                        console.log('Week Time Bto = ' + String(str));
+                        if ((day - 1) != 0 && (day - 1) != 6) $('#breakweek_to1').val(String(str));
+                        else if ((day - 1) == 6) $('#breakweek_to6').val(String(str));
+
+
                         if ($data['' + (day - 1)].Auto === 1 || String($data['' + (day - 1)].Auto) === "1") { $('#' + select + '_auto_on_check' + (day - 1)).prop("checked", true); }
                         else { $('#' + select + '_auto_on_check' + (day - 1)).prop("checked", false); }
                         $('#' + select + '_timer' + (day - 1)).val(parseInt($data['' + (day - 1)].Td));
@@ -270,7 +429,6 @@ function RefreshProg(select) {
                         $('#' + select + '_timeweek_to' + (day - 1)).val("");
                         $('#' + select + '_auto_on_check' + (day - 1)).prop("checked", false);
                         $('#' + select + '_timer' + (day - 1)).val("");
-
                     }
                 }
 

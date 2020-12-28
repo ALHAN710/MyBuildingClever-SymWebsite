@@ -6,8 +6,8 @@
 
 	<script>
 		var $url = "{{ path('light_prog') }}";
-        var tabInt = {{devicesNb.NbLightInt}};
-        var tabExt = {{devicesNb.NbLightExt}};
+        var tabClim = {{devicesNb.NbClim}};
+        var tabFan = {{devicesNb.NbFan}};
 		//var $alarmUrl = "{{ path('security_alarm')	}}";	
 	</script>
 
@@ -16,20 +16,20 @@
 {% block body %}
     {% set days = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"] %}
                                     
-    <h1>Programmation horaire <i class="fa fa-clock"></i> </h1>
+    <h1>Programmation <i class="fa fa-clock"></i> </h1>
     <!-- Main content START -->
     <div class="row">
         <div class="col-12 col-sm-10 offset-sm-1">
         <!-- Settings tabs START -->
         <ul class="nav nav-tabs nav-fill" role="tablist">
-            {% if devicesNb.NbLightInt > 0 %}
+            {% if devicesNb.NbClim > 0 %}
             <li class="nav-item">
-            <a class="nav-link {% if tabpanel == 0 %}active{% endif %}" data-toggle="tab" href="#LightInt" role="tab">Interior</a>
+                <a class="nav-link {% if tabpanel == 0 %}active{% endif %}" data-toggle="tab" href="#Clim" role="tab">Climatiseur</a>
             </li>
             {% endif %}
-            {% if devicesNb.NbLightExt > 0 %}
+            {% if devicesNb.NbFan > 0 %}
             <li class="nav-item">
-            <a class="nav-link {% if tabpanel == 1 %}active{% endif %}" data-toggle="tab" href="#LightExt" role="tab">Exterior</a>
+                <a class="nav-link {% if tabpanel == 1 %}active{% endif %}" data-toggle="tab" href="#Fan" role="tab">Ventilateur</a>
             </li>
             {% endif %}
         </ul>
@@ -39,25 +39,54 @@
         <!-- Settings tab panes -->
         <div class="tab-content px-4 px-sm-0 py-sm-4 mt-4">
 
-            <!-- LIGHT INTERIOR pane START -->
-            <div class="tab-pane fade {% if tabpanel == 0 %} show active {% endif %}" id="LightInt" role="tabpanel">
+            <!-- Air Conditioner pane START -->
+            <div class="tab-pane fade {% if tabpanel == 0 %} show active {% endif %}" id="Clim" role="tabpanel">
             
                 <div class="form-group">
                     <form class="form-inline justify-content-left">
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-lightbulb"></i></span>
+                                <span class="input-group-text">
+                                    <i class="fa fa-thermometer-half"></i>
+                                </span>
                             </div>
-                            {% if devicesNb.NbLightInt > 1 %}
-                            <select class="form-control " id="lightInt_select" style="min-height: 40px; min-width: 30px">
-                                {% for lightInt in devicesTab.LightInt %}
-                                <option value="{{lightInt.name}}" {% if lightInt.id == id %}selected="selected"{% endif %}>{{lightInt.name}}</option>
+                            {% if devicesNb.NbClim > 1 %}
+                            <select class="form-control " id="clim_select" style="min-height: 40px; min-width: 30px">
+                                {% for clim in devicesTab.Clim %}
+                                <option value="{{clim.name}}" {% if clim.id == id %}selected="selected"{% endif %}>{{clim.name}}</option>
                                 {% endfor %}
                             </select>
                             {% else %}
-                            <input type="text" class="form-control" placeholder="{{lightInt.name}}" disabled>
+                            <input type="text" class="form-control" placeholder="{{clim.name}}" disabled>
                             {% endif %}
+
+                        </div>
+
+                        <div class="input-group col-12 mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Scénario</span>
+                            </div>
+                            <select class="form-control " id="scenario" style="min-height: 40px; min-width: 30px">
+                                <option value="Prog">Programmation horaire uniquement</option>
+                                <option value="Break">Heure de Pause uniquement</option>
+                                <option value="Reg">Régulation uniquement</option>
+                                <option value="Prog&Break">Programmation horaire avec Heure de Pause</option>
+                                <option value="Prog&Reg">Programmation horaire avec Régulation</option>
+                                <!--<option value="Break&Reg">Break Time & Regulation</option>-->
+                                <option value="All" selected="selected">All</option>
+                            </select>
+                        </div>
+                        <div class="input-group col-12 mb-3" id="timeRegFields">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Time ON</span>
+                            </div>
+                            <input class="form-control mr-sm-4 " type="number" min="0" max="1440" name="timeON" id="timeON">
+
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Time OFF</span>
+                            </div>
+                            <input class="form-control mr-sm-4 " type="number" min="0" max="1440" name="timeOFF" id="timeOFF">
 
                         </div>
                     </form>
@@ -69,43 +98,40 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <div class="form-inline justify-content-center">Applying
-                                                days</div>
+                                            <div class="form-inline justify-content-center">Jours</div>
                                         </th>
                                         <th>
-                                            <div class="form-inline justify-content-center">Working
-                                                from</div>
+                                            <div class="form-inline justify-content-center">Heure de Démarrage</div>
                                         </th>
                                         <th>
-                                            <div class="form-inline justify-content-center">To</div>
+                                            <div class="form-inline justify-content-center">Heure d'arrêt</div>
                                         </th>
                                         <th>
-                                            <div class="form-inline justify-content-center">Auto On
-                                                Status</div>
+                                            <div class="form-inline justify-content-center">Démarrage Automatique</div>
                                         </th>
                                         <th>
-                                            <div class="form-inline justify-content-center">Timer
-                                                beyond Work interval (in minutes)</div>
+                                            <div class="form-inline justify-content-center">Durée de fonctionnement hors plage(en minutes) </div>
+                                        </th>
+                                        <th>
+                                            <div class="form-inline justify-content-center">Heure de Pause</div>
                                         </th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     {% for day in days %}
-                                    <tr>
-                                        <td class="">
+                                    <tr class="justify-content-center align-items-center ">
+                                        <td >
+                                            {{day}}
+                                        </td>
+                                        <td class="align-middle">
                                             <div class="form-inline justify-content-center">
-                                                {{day}}
+                                                <input class="form-control" type="time" name="clim_timeweek_from{{ loop.index0 }}" id="clim_timeweek_from{{ loop.index0 }}" align="center">
                                             </div>
                                         </td>
                                         <td class="align-middle">
                                             <div class="form-inline justify-content-center">
-                                                <input class="form-control" type="time" name="lightInt_timeweek_from{{ loop.index0 }}" id="lightInt_timeweek_from{{ loop.index0 }}" align="center">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <div class="form-inline justify-content-center">
-                                                <input class="form-control" type="time" name="lightInt_timeweek_to{{ loop.index0 }}" id="lightInt_timeweek_to{{ loop.index0 }}" align="center">
+                                                <input class="form-control" type="time" name="clim_timeweek_to{{ loop.index0 }}" id="clim_timeweek_to{{ loop.index0 }}" align="center">
                                             </div>
                                         </td>
                                         <td class="align-middle">
@@ -113,8 +139,8 @@
                                                 <div class="form-check mb-2 mr-sm-2">
 
                                                     <div class="custom-control custom-checkbox align-middle" align="center">
-                                                        <input type="checkbox" class="custom-control-input" id="lightInt_auto_on_check{{ loop.index0 }}" checked="checked">
-                                                        <label class="custom-control-label" for="lightInt_auto_on_check{{ loop.index0 }}"></label>
+                                                        <input type="checkbox" class="custom-control-input" id="clim_auto_on_check{{ loop.index0 }}" checked="checked">
+                                                        <label class="custom-control-label" for="clim_auto_on_check{{ loop.index0 }}"></label>
                                                     </div>
 
 
@@ -123,10 +149,33 @@
                                         </td>
                                         <td class="align-middle">
                                             <div class="form-inline justify-content-center">
-                                                <input class="form-control mr-sm-4 " type="number" min="0" max="1440" name="lightInt_timer{{ loop.index0 }}" id="lightInt_timer{{ loop.index0 }}">
+                                                <input class="form-control mr-sm-4 " type="number" min="0" max="1440" name="clim_timer{{ loop.index0 }}" id="clim_timer{{ loop.index0 }}">
 
                                             </div>
                                         </td>
+                                        {% if day == "Lundi" or day == "Samedi" or day == "Dimanche" %}
+                                        <td class="text-center align-middle" {% if day == "Lundi" %}rowspan="5"{% endif %}>
+                                            {% if day != "Dimanche" %}
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-inline ">
+                                                        <input class="form-control" type="time" name="breakweek_from{{ loop.index0 }}" id="breakweek_from{{ loop.index0 }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col mt-2">
+                                                    <div class="form-inline ">
+                                                        <input class="form-control" type="time" name="breakweek_to{{ loop.index0 }}" id="breakweek_to{{ loop.index0 }}">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            {% else %}
+                                            -
+                                            <input class="form-control" type="hidden" value="" name="breakweek_from{{ loop.index0 }}" id="breakweek_from{{ loop.index0 }}">
+                                            <input class="form-control" type="hidden" value="" name="breakweek_to{{ loop.index0 }}" id="breakweek_to{{ loop.index0 }}">
+                                            {% endif %}
+                                        </td>
+                                        {% endif %}
                                     </tr>
                                     {% endfor %}
                                     {#
@@ -138,7 +187,7 @@
                                         </td>
                                         <td class="align-middle">
                                             <div class="form-inline justify-content-center">
-                                                <input class="form-control" type="time" name="lightInt_timeweek_from1" id="lightInt_timeweek_from1" align="center">
+                                                <input class="form-control" type="time" name="clim_timeweek_from1" id="lightInt_timeweek_from1" align="center">
                                             </div>
                                         </td>
                                         <td class="align-middle">
@@ -263,7 +312,7 @@
                     
                 </div>
                 <form class="form-inline justify-content-end">
-                    <button class="button btn btn-primary btn-lg mt-3 mb-2 mr-sm-4" id="Save_LightIntProg" data-toggle="tooltip" data-placement="top" title="Save Light interior Programming" type="button" style=" cursor : pointer;min-width: 100px">
+                    <button class="button btn btn-primary btn-lg mt-3 mb-2 mr-sm-4" id="Save_ACProg" data-toggle="tooltip" data-placement="top" title="Save Light interior Programming" type="button" style=" cursor : pointer;min-width: 100px">
                         <i class="fa fa-save"></i>  Save
                     </button>
                 </form>  
@@ -276,10 +325,10 @@
                     </div>
                 </div>                 
             </div>
-            <!-- LIGHT INTERIOR pane END -->
+            <!-- Air Conditioner pane END -->
 
-            <!-- LIGHT EXTERIOR pane START -->
-            <div class="tab-pane fade {% if tabpanel == 1 %} show active {% endif %}" id="LightExt" role="tabpanel">
+            <!-- FAN pane START -->
+            <div class="tab-pane fade {% if tabpanel == 1 %} show active {% endif %}" id="Fan" role="tabpanel">
                 <div class="form-group">
                     <form class="form-inline justify-content-left">
 
@@ -287,14 +336,14 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-lightbulb"></i></span>
                             </div>
-                            {% if devicesNb.NbLightExt > 1 %}
-                            <select class="form-control " id="lightExt_select" style="min-height: 40px; min-width: 30px">
-                                {% for lightExt in devicesTab.LightExt %}
-                                <option value="{{lightExt.name}}" {% if lightExt.id == id %}selected="selected"{% endif %}>{{lightExt.name}}</option>
+                            {% if devicesNb.NbFan > 1 %}
+                            <select class="form-control " id="fan_select" style="min-height: 40px; min-width: 30px">
+                                {% for fan in devicesTab.Fan %}
+                                <option value="{{fan.name}}" {% if fan.id == id %}selected="selected"{% endif %}>{{fan.name}}</option>
                                 {% endfor %}
                             </select>
-                            {% else %}
-                            <input type="text" class="form-control" placeholder="{{lightExt.name}}" disabled>
+                            {% elseif devicesNb.NbFan == 1 %}
+                            <input type="text" class="form-control" placeholder="{{devicesTab.Fan[0].name}}" disabled>
                             {% endif %}
 
                         </div>
@@ -524,7 +573,7 @@
                     </div>
                 </div>
             </div>
-            <!-- LIGHT EXTERIOR pane END -->
+            <!-- FAN pane END -->
             
         </div>
         <!-- Profile tabs END -->
@@ -535,6 +584,5 @@
 
 {% block javascripts %}
   <script src="/js/smartHome.js"></script>
-  <script src="/js/lightsProgramming.js"></script>
-  
+  <script src="/js/AC-Programming.js"></script>
 {% endblock %}

@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>
-			My CleverHome - {% block title %}{% endblock %}
+			My CleverHome | {% block title %}{% endblock %}
 		</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -160,7 +160,7 @@
 							</li>
 
 							<li class="nav-item {% if menu == 'Climate' %}active{% endif %}">
-								<a class="nav-link {% if menu == 'Climate' %}active{% endif %}" href="climate.html">
+								<a class="nav-link {% if menu == 'Climate' %}active{% endif %}" href="{{ path('climate_index') }}">
 									<svg class="icon-sprite"><use xlink:href="/images/icons-sprite.svg#thermometer"/></svg> <span>Climat</span>
 								</a>
 							</li>

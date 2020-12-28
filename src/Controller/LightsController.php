@@ -20,13 +20,13 @@ class LightsController extends ApplicationController
      */
     public function index(SecuritySystemRepository $securityRepo, DevicesRepository $repoDevices)
     {
-        $array1 = array("Orange" => 100, "Apple" => 200, "Banana" => 300, "Cherry" => 400);
+        /*$array1 = array("Orange" => 100, "Apple" => 200, "Banana" => 300, "Cherry" => 400);
         if (array_key_exists("Banana", $array1)) {
             dump("Array Key exists...");
             dump($array1['Banana']);
         } else {
             dump("Array Key does not exist...");
-        }
+        }*/
         return $this->render('lights/index_lights.html.twig', [
             'devicesNb'  => $this->getRepoDevice($repoDevices)['devicesNb'],
             'devicesTab' => $this->getRepoDevice($repoDevices)['devicesTab'],
@@ -91,7 +91,10 @@ class LightsController extends ApplicationController
             //$arr = $this->getJSONRequest($paramJSON['prog']);
             //dump($arr);
             //Recherche du device dans la BDD
-            $device = $devicesRepo->findOneBy(['name' => $arr['outName']]);
+            $device = $devicesRepo->findOneBy([
+                'name' => $arr['outName'],
+                'type' => $paramJSON['type']
+            ]);
 
             //dump($device);
             if ($device != null) { // Test si le device existe dans notre BDD
@@ -103,7 +106,6 @@ class LightsController extends ApplicationController
                     'code'     => 200,
                     'received' => $paramJSON,
                     'success'  => 1,
-
                 ], 200);
             }
         } else if ($action == 'get prog') {
@@ -113,10 +115,16 @@ class LightsController extends ApplicationController
             $criteria = $paramJSON['criteria'];
             if ($criteria == 'name') {
                 $name = $paramJSON['name'];
-                $device = $devicesRepo->findOneBy(['name' => $name]);
+                $device = $devicesRepo->findOneBy([
+                    'name' => $name,
+                    'type' => $paramJSON['type']
+                ]);
             } else if ($criteria == 'moduleId') {
                 $id = $paramJSON['moduleId'];
-                $device = $devicesRepo->findOneBy(['moduleId' => $id]);
+                $device = $devicesRepo->findOneBy([
+                    'moduleId' => $id,
+                    'type' => $paramJSON['type']
+                ]);
             }
 
             //dump($device);
@@ -127,7 +135,6 @@ class LightsController extends ApplicationController
                     'code'     => 200,
                     'prog'     => $jsonProg,
                     'success'  => ($jsonProg == null ? 0 : 1),
-
                 ], 200);
             }
         }

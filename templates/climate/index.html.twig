@@ -1,20 +1,765 @@
-{% extends 'base.html.twig' %}
+{%	extends 'base.html.twig' %}
 
-{% block title %}Hello ClimateController!{% endblock %}
+{% block title	%}
+	Accueil Climat
+{%	endblock	%}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block stylesheet	%}
+    
+{% endblock	%}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+{%	block body	%}
+{% if devicesNb.NbClim > 0 %}
+    <!-- Clim START -->
+    <div class="row" data-unit-group="AC">
+        {% if devicesNb.NbClim > 1 %}
+            <div class="col-sm-12 col-md-6 col-xl-4">
+                <!-- ON/OFF all Clim  START -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Climatiseur</h3>
+                    </div>
+                    <hr class="my-0">
+                    <div class="card-body">
+                        <div class="lights-controls" data-controls="AC">
+                            <button data-action="all-on" type="button" class="btn btn-primary mr-2 lights-control">All <strong>ON</strong></button>
+                            <button data-action="all-off" type="button" class="btn btn-secondary lights-control">All <strong>OFF</strong></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- ON/OFF all Clim  END -->
+            </div>
+        {% endif %}
+        {% for clim in devicesTab.Clim %}
+        <!-- Climates  START -->
+        <div class="col-sm-12 col-md-6">
+            <!-- {{clim.name}} temperature  START -->
+            <div class="card temp-range heating" data-unit="AC-{{clim.moduleId}}">
+                <ul class="list-group borderless">
+                    <li class="list-group-item align-items-center">
+                        <svg class="icon-sprite icon-1x">
+                            <use xlink:href="/images/icons-sprite.svg#thermometer-tiny"/>
+                        </svg>
+                        <h5>{{clim.name}}</h5>
+                        {# <h5 class="ml-auto status">71.6<sup>°F</sup></h5> #}
+                        <label class="switch ml-auto">
+                            <input type="checkbox" id="AC-{{clim.moduleId}}">
+                        </label>
+                    </li>
+                </ul>
+                <hr class="my-0">
+                <ul class="list-group borderless ">
+                    <li class="list-group-item">
+                        <p class="specs">Connection</p>
+                        {#<p class="ml-auto mb-0 text-success">OK</p>#}
+                        <div class="ml-auto mb-0"><canvas id="led-{{clim.moduleId}}" data-entry-led="AC-{{clim.moduleId}}" data-entry-ledid="led-{{clim.moduleId}}" width="30" height="30"></canvas></div>
+                    </li>
+                    <li class="list-group-item d-flex pt-0 pb-4">
+                        <p class="specs">Temps restant</p>
+                        <p id="RT_AC-{{clim.moduleId}}" class="ml-auto mb-0">00:00:00</p>
+                    </li>
+                    <li class="list-group-item pt-0">
+                        <p class="specs">Programmation</p>
+                        <p class="ml-auto mb-0"><a href="{{path("climates_programming", {"id":clim.id,"tabpanel":0})}}"><i class="fa fa-clock"></i></a></p>
+                    </li>
+                
+                </ul>
+                {# <div class="d-flex justify-content-between" data-rangeslider="room-temp-02">
+                    <ul class="list-group borderless px-1 align-items-stretch">
+                        <li class="list-group-item">
+                        <p class="specs mr-auto mb-auto">Température Désirée</p>
+                        </li>
+                        <li class="list-group-item d-flex flex-column pb-4">
+                        <p class="mr-auto mt-2 mb-0 display-5">
+                            <span class="room-temp-F">71.6</span><sup>°F</sup>
+                        </p>
+                        <p class="mr-auto mt-2 mb-0 lead text-primary">
+                            <span class="room-temp-C">22</span><sup>°C</sup>
+                        </p>
+                        </li>
+                    </ul>
+                    <div class="p-4" style="position:relative;">
+                        <input id="room-temp-02" disabled class="room-temp" type="range" min="66.2" max="77" step="0.1" value="0" data-orientation="vertical">
+                    </div>
+                </div> #}
+            </div>
+            <!-- {{clim.name}} temperature  END -->
+        </div>
+        {# <div class="col-sm-12 col-md-6">
+            <!-- Bedroom temperature  START -->
+            <div class="card temp-range" data-unit="room-temp-01">
+                <ul class="list-group borderless">
+                    <li class="list-group-item align-items-center">
+                        <svg class="icon-sprite icon-1x">
+                                    <use xlink:href="/images/icons-sprite.svg#thermometer-tiny"/>
+                                </svg>
+                        <h5>Bedroom</h5>
+                        { <h5 class="ml-auto status">71.6<sup>°F</sup></h5> }
+                        <label class="switch ml-auto checked">
+                            <input type="checkbox" id="fan-kitchen" checked>
+                        </label>
+                    </li>
+                </ul>
+                <hr class="my-0">
+                <li class="list-group-item">
+                    <p class="specs">Connection</p>
+                    {<p class="ml-auto mb-0 text-success">OK</p>}
+                    <div class="ml-auto mb-0"><canvas id="led-{{1}}" data-entry-led="switch-light-{{1}}" data-entry-ledid="led-{{1}}" width="30" height="30"></canvas></div>
+                </li>
+                <li class="list-group-item pt-0">
+                    <p class="specs">Programmation</p>
+                    <p class="ml-auto mb-0"><a href="{{path("lights_programming", {"id":1,"tabpanel":1})}}"><i class="fa fa-clock"></i></a></p>
+                </li>
+                <div class="d-flex justify-content-between" data-rangeslider="room-temp-01">
+                    <ul class="list-group borderless px-1 align-items-stretch">
+                        <li class="list-group-item">
+                        <p class="specs mr-auto mb-auto">Température Désirée</p>
+                        </li>
+                        <li class="list-group-item d-flex flex-column pb-4">
+                        <p class="mr-auto mt-2 mb-0 display-5">
+                            <span class="room-temp-F">71.6</span><sup>°F</sup>
+                        </p>
+                        <p class="mr-auto mt-2 mb-0 lead text-primary">
+                            <span class="room-temp-C">22</span><sup>°C</sup>
+                        </p>
+                        </li>
+                    </ul>
+                    <div class="p-4" style="position:relative;">
+                        <input id="room-temp-01" class="room-temp" type="range" min="66.2" max="77" step="0.1" value="71.6" data-orientation="vertical">
+                        <div class="info-holder info-lc">
+                        <div data-toggle="popover-all" data-content="jQuery range slider using localStorage to remember the last status." data-original-title="Temperature control" data-placement="left" data-offset="0 -12px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Bedroom temperature  END -->
+        </div> #}
+        {% endfor %}
+    </div>
+{% endif %}
+            
+	<div class="row" >
+        {% for fan in devicesTab.Fan %}
+        <div class="col-sm-12 col-md-6">
+            <!-- FAN {{fan.name}}  START -->
+            <div class="card active" data-unit="fan-kitchen">
+                <!-- FAN {{fan.name}} switch START -->
+                <ul class="list-group borderless">
+                    <li class="list-group-item align-items-center">
+                        <svg class="icon-sprite icon-1x">
+                            <use xlink:href="/images/icons-sprite.svg#fan"/>
+                        </svg>
+                        <h5>{{fan.name}}</h5>
+                        <label class="switch ml-auto">
+                            <input type="checkbox" id="fan-kitchen">
+                        </label>
+                    </li>
+                </ul>
+                <!-- FAN Kitchen switch END -->
+                <div class="only-if-active">
+                <hr class="my-0">
+                <ul class="list-group borderless px-1">
+                    <li class="list-group-item pb-0">
+                        <p class="specs">Connection</p>
+                        {# <p class="ml-auto mb-0 text-success">OK</p> #}
+                        <div class="ml-auto mb-0"><canvas id="led-{{fan.moduleId}}" data-entry-led="switch-fan-{{fan.moduleId}}" data-entry-ledid="led-{{fan.moduleId}}" width="30" height="30"></canvas></div>
+                    </li>
+                </ul>
+                <!-- Speed control - range slider START -->
+                <ul class="list-group borderless px-1" data-rangeslider="fan-01">
+                    <li class="list-group-item">
+                        <p class="specs">Speed</p>
+                        <p class="ml-auto mb-0"><span class="range-output">3</span></p>
+                    </li>
+                    <li class="list-group-item pt-0 pb-4">
+                        <input id="fan-01" disabled class="fanspeed" type="range" min="1" max="6" value="3">
+                    </li>
+                </ul>
+                <!-- Speed control - range slider END -->
+                </div>
+            </div>
+            <!-- FAN Kitchen END -->
+        </div>
+        {# <div class="col-sm-12 col-md-6">
+            <!-- FAN Bathroom  START -->
+            <div class="card active" data-unit="fan-bathroom">
+                <!-- FAN Bathroom switch START -->
+                <ul class="list-group borderless">
+                <li class="list-group-item align-items-center">
+                    <svg class="icon-sprite icon-1x">
+                                <use xlink:href="/images/icons-sprite.svg#fan"/>
+                            </svg>
+                    <h5>Bathroom</h5>
+                    <label class="switch ml-auto checked">
+                                <input type="checkbox" id="fan-bathroom" checked>
+                            </label>
+                </li>
+                </ul>
+                <!-- FAN Bathroom switch END -->
+                <div class="only-if-active">
+                <hr class="my-0">
+                <ul class="list-group borderless px-1">
+                    <li class="list-group-item pb-0">
+                    <p class="specs">Connection</p>
+                    <p class="ml-auto mb-0 text-success">OK</p>
+                    </li>
+                </ul>
+                <!-- Speed control - range slider START -->
+                <ul class="list-group borderless px-1" data-rangeslider="fan-02">
+                    <li class="list-group-item">
+                    <p class="specs">Speed</p>
+                    <p class="ml-auto mb-0"><span class="range-output">3</span></p>
+                    </li>
+                    <li class="list-group-item pt-0 pb-4">
+                    <input id="fan-02" class="fanspeed" type="range" min="1" max="6" value="3">
+                    </li>
+                </ul>
+                <!-- Speed control - range slider END -->
+                </div>
+            </div>
+            <!-- FAN Bathroom END -->
+        </div> #}
+        {% endfor %}
+    </div>
+    	
+{% endblock %}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/PASCAL ALHADOUM/Documents/Projets/MBC/MyBuildingClever-SymWebsite/src/Controller/ClimateController.php'|file_link(0) }}">src/Controller/ClimateController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/PASCAL ALHADOUM/Documents/Projets/MBC/MyBuildingClever-SymWebsite/templates/climate/index.html.twig'|file_link(0) }}">templates/climate/index.html.twig</a></code></li>
-    </ul>
-</div>
+{% block javascripts %}
+    
+    <script src="/js/smartHome.js"></script>
+    <script>
+        // Data binding for numeric representation of Room temperature range slider
+      $(document).on('input', 'input[type="range"].room-temp', function() {
+        var temperatureFar = this.value;
+        var temperatureCel = (temperatureFar - 32) * 5 / 9;
+        var roundCel = Number(Math.round(temperatureCel + 'e2') + 'e-2');
+        $('[data-rangeslider="' + this.id + '"] .room-temp-F').html(temperatureFar);
+        $('[data-rangeslider="' + this.id + '"] .room-temp-C').html(roundCel);
+
+        // Manage temperature visualisation heating/cooling in regard to desired (71.6 F)
+        if (temperatureFar > 71.6) {
+          $('[data-unit="' + this.id + '"]').addClass("heating");
+          $('[data-unit="' + this.id + '"]').removeClass("cooling");
+        } else if (temperatureFar < 71.6) {
+          $('[data-unit="' + this.id + '"]').addClass("cooling");
+          $('[data-unit="' + this.id + '"]').removeClass("heating");
+
+        } else {
+          $('[data-unit="' + this.id + '"]').removeClass("cooling");
+          $('[data-unit="' + this.id + '"]').removeClass("heating");
+        }
+      });
+
+      // Data binding for numeric representation of Fan speed range slider
+      $(document).on('input', 'input[type="range"].fanspeed', function() {
+        $('[data-rangeslider="' + this.id + '"] .range-output').html(this.value);
+      })
+    </script>
+    {#
+    <script>
+		$(document).ready(function() {
+
+            var wsUrl = 'ws://' + '{{ ws_url }}';
+            console.log(wsUrl);
+            var mess = {
+                From: "user",
+                To: "light",
+                Object: "Toggle",
+                message: "on"
+            }; 
+            function wsMessageProcessing(jsonMessage){
+                var To = jsonMessage.To;
+                var From = jsonMessage.From;
+                var mess = jsonMessage.message;
+                var object = jsonMessage.Object;
+                var role = jsonMessage.role;
+            }
+            init();
+                    
+            // This is called when the page finishes loading
+            function init() {
+
+                // Assign page elements to variables
+                /*canvas = document.getElementById("led");
+
+                // Draw circle in canvas
+                context = canvas.getContext("2d");
+                context.arc(15, 15, 5, 0, Math.PI * 2, false);
+                context.lineWidth = 3;
+                context.strokeStyle = "red";
+                context.stroke();
+                context.fillStyle = "red";
+                context.fill();*/
+
+                // Connect to WebSocket server
+                wsConnect(wsUrl);
+            }
+
+            // Call this to connect to the WebSocket server
+            function wsConnect(wsUrl) {
+
+                // Connect to WebSocket server
+                websocket = new WebSocket(wsUrl);
+
+                // Assign callbacks
+                websocket.onopen = function (evt) { onOpen(evt) };
+                websocket.onclose = function (evt) { onClose(evt) };
+                websocket.onmessage = function (evt) { onMessage(evt) };
+                websocket.onerror = function (evt) { onError(evt) };
+            }
+
+            // Called when a WebSocket connection is established with the server
+            function onOpen(evt) {
+
+                /*context.strokeStyle = "green";
+                context.stroke();
+                context.fillStyle = "green";
+                context.fill();*/
+                // Log connection state
+                console.log("Connected");
+
+            }
+
+            // Called when the WebSocket connection is closed
+            function onClose(evt) {
+                /*context.strokeStyle = "red";
+                context.stroke();
+                context.fillStyle = "red";
+                context.fill();*/
+                // Log disconnection state
+                console.log("Disconnected");
+
+                // Try to reconnect after a few seconds
+                setTimeout(function () { wsConnect(wsUrl) }, 2000);
+            }
+
+            // Called when a message is received from the server
+            function onMessage(evt) {
+
+                // Print out our received message
+                //console.log("type of evt.data: " + typeof evt.data);
+                console.log("Received: " + evt.data);
+                var str = String(evt.data);
+                //console.log("str: " + str);
+                var json= JSON.parse(evt.data);
+                //console.log("json : " + json);
+                //$("#" + json.To).prop('checked', parseInt(json.message));
+                //$("#" + key).closest("label").addClass("checked");
+                console.log(parseInt(json.message));
+                var status;
+
+                switch (json.To) {
+                    case "user":
+                        status = (parseInt(json.message) === 1) ? true : false;
+                        $('[data-unit="' + json.From + '"]').toggleClass("active");
+                        //$('#' + json.To).closest("label").toggleClass("checked", status);
+                        
+                        $("#" + json.From).prop('checked', status);
+                        if(status) $("#" + json.From).closest("label").addClass("checked");
+                        else $("#" + json.From).closest("label").removeClass("checked");
+                        break;
+                    case "S0=HIGH":
+                        console.log("LED is on");
+                        setBouton('ECL1', 1);
+                        break;
+                    case "2":
+                        console.log("case : 2");
+                    default:
+                        break;
+                }
+            }
+
+            // Called when a WebSocket error occurs
+            function onError(evt) {
+                console.log("ERROR: " + evt.data);
+            }
+
+            // Sends a message to the server (and prints it to the console)
+            function doSend(message) {
+                console.log("Sending: " + message);
+                websocket.send(message);
+            }
+
+            // Called whenever the HTML button is pressed
+            function onPress() {
+                doSend("toggleLED");
+                doSend("getLEDState");
+                //doSend("getMeasurements");
+            }
+
+			// Get checkbox statuses from localStorage if available (IE)
+			if (localStorage) {
+
+				// Menu minifier status (Contract/expand side menu on large screens)
+				var checkboxValue = localStorage.getItem('minifier');
+
+				if (checkboxValue === 'true') {
+					$('#sidebar,#menu-minifier').addClass('mini');
+					$('#minifier').prop('checked', true);
+
+				} else {
+
+					if ($('#minifier').is(':checked')) {
+						$('#sidebar,#menu-minifier').addClass('mini');
+						$('#minifier').prop('checked', true);
+					} else {
+						$('#sidebar,#menu-minifier').removeClass('mini');
+						$('#minifier').prop('checked', false);
+					}
+				}
+
+				// Switch statuses
+				//var switchValues = JSON.parse(localStorage.getItem('switchValues')) || {};
+
+				/*$.each(switchValues, function(key, value) {
+
+					// Apply only if element is included on the page
+					if ($('[data-unit="' + key + '"]').length) {
+
+						if (value === true) {
+
+							// Apply appearance of the "unit" and checkbox element
+							$('[data-unit="' + key + '"]').addClass("active");
+							$("#" + key).prop('checked', true);
+							$("#" + key).closest("label").addClass("checked");
+
+							//In case of Camera unit - play video
+							if (key === "switch-camera-1" || key === "switch-camera-2") {
+								$('[data-unit="' + key + '"] video')[0].play();
+							}
+
+						} else {
+							$('[data-unit="' + key + '"]').removeClass("active");
+							$("#" + key).prop('checked', false);
+							$("#" + key).closest("label").removeClass("checked");
+							if (key === "switch-camera-1" || key === "switch-camera-2") {
+								$('[data-unit="' + key + '"] video')[0].pause();
+							}
+						}
+					}
+				});*/
+			}
+
+
+			// Contract/expand side menu on click. (only large screens)
+			$('#minifier').click(function() {
+
+				$('#sidebar,#menu-minifier').toggleClass('mini');
+
+				// Save side menu status to localStorage if available (IE)
+				if (localStorage) {
+					checkboxValue = this.checked;
+					localStorage.setItem('minifier', checkboxValue);
+				}
+
+			});
+
+
+			// Side menu toogler for medium and small screens
+			$('[data-toggle="offcanvas"]').click(function() {
+				$('.row-offcanvas').toggleClass('active');
+			});
+
+
+			// Switch (checkbox element) toogler
+			$('.switch input[type="checkbox"]').on("change", function(t) {
+
+				// Check the time between changes to prevert Android native browser execute twice
+				// If you dont need support for Android native browser - just call "switchSingle" function
+				if (this.last) {
+
+					this.diff = t.timeStamp - this.last;
+
+					// Don't execute if the time between changes is too short (less than 250ms) - Android native browser "twice bug"
+					// The real time between two human taps/clicks is usually much more than 250ms"
+					if (this.diff > 250) {
+
+						this.last = t.timeStamp;
+                        mess.To = this.id;
+                        mess.message =  (this.checked ? 1 : 0);
+                        
+                        //message.To = "moi";
+                        doSend(JSON.stringify(mess));
+                        this.checked = !this.checked;
+                        //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                        //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                        console.log('id = ' + this.id);
+                        console.log('checked = ' + this.checked);
+						//iot.switchSingle(this.id, this.checked);
+
+					} else {
+						return false;
+					}
+
+				} else {
+
+					// First attempt on this switch element
+					this.last = t.timeStamp;
+                    mess.To = this.id;
+                    mess.message = (this.checked ? 1 : 0);
+                    
+                    doSend(JSON.stringify(mess));
+                    this.checked = !this.checked;
+                    //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                    //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                    console.log('id = ' + this.id);
+                    console.log('checked = ' + this.checked);
+                    //iot.switchSingle(this.id, this.checked);
+
+				}
+			});
+
+			// All ON/OFF controls
+			$('.lights-control').click(function() {
+
+				var target = $(this).closest('.lights-controls').data('controls');
+				var action = $(this).data('action');
+                console.log('target = ' + target);
+                console.log('action = ' + action);
+				//iot.switchGroup(target, action);
+                var el = '[data-unit-group="' + target + '"]';
+                var key;
+                var id;
+                var status;
+                // Apply changes based on action
+                switch (action) {
+
+                    case 'all-on':
+                        $(el + ' [data-unit]').each(function () {
+                            //console.log(this);
+                            key = $(this).data('unit');
+                            id = "#" + key;
+                            //$(this).addClass("active");
+                            //$("#" + key).prop('checked', true);
+                            //$("#" + key).closest("label").addClass("checked");
+
+                            status = $(id).is(':checked');
+                            if(!status){
+                                mess.To = key;
+                                mess.message = 1;
+                                
+                                //message.To = "moi";
+                                doSend(JSON.stringify(mess));
+                                //$(id).prop('checked', !status);
+                                //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                                //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                                console.log('id = ' + key);
+                                console.log('checked = ' + status);
+                                //switchValues[key] = true;
+                            }   
+
+                        });
+                    break;
+                    case 'all-off':
+                        $(el + ' [data-unit]').each(function () {
+                            key = $(this).data('unit');
+                            id = "#" + key;
+                            //$(this).addClass("active");
+                            //$("#" + key).prop('checked', true);
+                            //$("#" + key).closest("label").addClass("checked");
+
+                            status = $(id).is(':checked');
+                            if(status){
+                                mess.To = key;
+                                mess.message = 0;
+                                
+                                //message.To = "moi";
+                                doSend(JSON.stringify(mess));
+                                //$(id).prop('checked', !status);
+                                //$('[data-unit="' + this.id + '"]').toggleClass("active");
+                                //$('#' + this.id).closest("label").toggleClass("checked", this.checked);
+                                console.log('id = ' + key);
+                                console.log('checked = ' + status);
+                                //switchValues[key] = true;
+                            }
+                        });
+                    break;
+                }
+
+			});
+
+			// Reposition to center when a modal is shown
+			$('.modal.centered').on('show.bs.modal', iot.centerModal);
+
+			// Alerts "Close" callback - hide modal and alert indicator dot when user closes all alerts
+			$('#alertsModal .alert').on('close.bs.alert', function() {
+				var sum = $('#alerts-toggler').attr('data-alerts');
+				sum = sum - 1;
+				$('#alerts-toggler').attr('data-alerts', sum);
+
+				if (sum === 0) {
+					$('#alertsModal').modal('hide');
+					$('#alerts-toggler').attr('data-toggle', 'none');
+
+				}
+
+			});
+
+			// Show/hide tips (popovers) - FAB button (right bottom on large screens)
+			$('#info-toggler').click(function() {
+
+				if ($('body').hasClass('info-active')) {
+					$('[data-toggle="popover-all"]').popover('hide');
+					$('body').removeClass('info-active');
+				} else {
+					$('[data-toggle="popover-all"]').popover('show');
+					$('body').addClass('info-active');
+				}
+			});
+
+			// Hide tips (popovers) by clicking outside
+			$('body').on('click', function(pop) {
+
+				if (pop.target.id !== 'info-toggler' && $('body').hasClass('info-active')) {
+					$('[data-toggle="popover-all"]').popover('hide');
+					$('body').removeClass('info-active');
+				}
+
+			});
+
+            // Data binding for numeric representation of range slider
+            $(document).on('input', 'input[type="range"]', function() {
+                $('[data-rangeslider="' + this.id + '"] .range-output').html(this.value);
+            });
+
+            // Bar Chart initialization settings - Chartist.js
+
+            var data01 = {
+                // Labels array that can contain any sort of values
+                labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                // Series array that contains series objects or in this case series data arrays
+                series: [{
+                    "name": "Kitchen",
+                    "data": [7, 4, 6, 5, 6, 3, 8]
+                },
+                {
+                    "name": "Dining room",
+                    "data": [3, 1, 1, 2, 1, 2, 2]
+                },
+                {
+                    "name": "Living room",
+                    "data": [6, 2, 3, 4, 2, 5, 7]
+                },
+                {
+                    "name": "Bedroom",
+                    "data": [2, 1, 1, 1, 1, 2, 3]
+                },
+                {
+                    "name": "Bathroom",
+                    "data": [6, 5, 6, 7, 5, 12, 9]
+                }
+                ]
+            };
+
+            var options01 = {
+                axisY: {
+                labelInterpolationFnc: function(value) {
+                    return value + 'h'
+                }
+                },
+                height: 240,
+                high: 14,
+                low: 0,
+                scaleMinSpace: 6,
+                onlyInteger: false,
+                referenceValue: 0,
+                seriesBarDistance: 8,
+                plugins: [
+                Chartist.plugins.legend({
+                    position: 'bottom'
+                })
+                ]
+            };
+
+            var responsive_steps01 = [
+                // Show only every second label
+                ['screen and (max-width: 768px)', {
+                axisX: {
+                    labelInterpolationFnc: function skipLabels(value, index, labels) {
+                    return index % 2 === 0 ? value : null;
+                    }
+                }
+                }],
+                // Show only every fourth label
+                ['screen and (max-width: 480px)', {
+                axisX: {
+                    labelInterpolationFnc: function skipLabels(value, index, labels) {
+                    return index % 4 === 0 ? value : null;
+                    }
+                }
+                }]
+            ];
+
+            // Pie Chart initialization settings - Chartist.js
+            var data02 = {
+                labels: ['Kitchen', 'Dining room', 'Living room', 'Bedroom', 'Bathroom'],
+                series: [28, 12, 20, 9, 31]
+            };
+
+            var options02 = {
+                chartPadding: 50,
+                donut: true,
+                donutWidth: 12,
+                labelOffset: 20,
+                labelDirection: 'explode',
+                labelInterpolationFnc: function(value, idx) {
+                return data02.series[idx] + '%'
+                }
+            };
+
+            var responsive_steps02 = [
+                ['screen and (max-width: 768px)', {
+                height: 240,
+                chartPadding: 25
+                }]
+            ];
+
+            // Initialize a Bar chart in the container with the ID chart01
+            new Chartist.Bar('#chart01', data01, options01, responsive_steps01)
+                .on('draw', function(data001) {
+                if (data001.type === 'bar') {
+                    data001.element.attr({
+                    style: 'stroke-width: 6px;'
+                    });
+                }
+                });
+
+            // Initialize a Pie chart in the container with the ID chart02
+            new Chartist.Pie('#chart02', data02, options02, responsive_steps02);
+
+		});
+
+		// Apply necessary changes, functionality when content is loaded
+		$(window).on('load', function() {
+
+			// This script is necessary for cross browsers icon sprite support (IE9+, ...) 
+			svg4everybody();
+
+			// "Timeout" function is not neccessary - important is to hide the preloader overlay
+			setTimeout(function() {
+
+				// Hide preloader overlay when content is loaded
+				$('#iot-preloader,.card-preloader').fadeOut();
+				$("#wrapper").removeClass("hidden");
+
+				// Check for Main contents scrollbar visibility and set right position for FAB button
+				iot.positionFab();
+
+			}, 800);
+
+		});
+
+		// Apply necessary changes if window resized
+		$(window).on('resize', function() {
+
+			// Modal reposition when the window is resized
+			$('.modal.centered:visible').each(iot.centerModal);
+
+			// Check for Main contents scrollbar visibility and set right position for FAB button
+			iot.positionFab();
+		});
+
+	</script>
+    #}
+	
 {% endblock %}
