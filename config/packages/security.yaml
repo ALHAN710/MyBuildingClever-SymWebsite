@@ -1,20 +1,21 @@
 security:
     encoders:
-            App\Entity\User:
-                algorithm:  bcrypt
+        App\Entity\User:
+            algorithm:  bcrypt
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         users_in_memory: { memory: null }
         in_database:
             entity:
                 class: App\Entity\User
-                #property: email
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: lazy
+            anonymous: true
+            lazy: true
             provider: in_database
 
             form_login:
@@ -25,6 +26,7 @@ security:
             logout:
                 path: account_logout
                 target: account_login
+
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -37,7 +39,7 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-         - { path: ^/websocket, , roles: IS_AUTHENTICATED_ANONYMOUSLY , requires_channel: http }
+        #- { path: ^/lights/prog, roles: IS_AUTHENTICATED_ANONYMOUSLY , requires_channel: http}
 
     # La partie role_hierarchy contient la hiérarchie des rôles
     # Un éditeur sera également utilisateur
@@ -45,4 +47,3 @@ security:
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
         ROLE_SUPER_ADMIN: ROLE_ADMIN
- 
